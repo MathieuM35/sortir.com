@@ -26,6 +26,11 @@ class Ville
      */
     private $codePostal;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Lieu",mappedBy="ville")
+     */
+    private $lieux;
+
     public function getId(): ?int
     {
         return $this->id;

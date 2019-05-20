@@ -36,6 +36,54 @@ class Lieu
      */
     private $longitude;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Sortie", mappedBy="lieu")
+     */
+    private $sorties;
+
+    /**
+     * Ville de la sortie
+     * @ORM\ManyToOne(targetEntity="App\Entity\Ville", inversedBy="lieux")
+     */
+    private $ville;
+
+    /**
+     * @return mixed
+     */
+    public function getVille()
+    {
+        return $this->ville;
+    }
+
+    /**
+     * @param mixed $ville
+     * @return Lieu
+     */
+    public function setVille($ville)
+    {
+        $this->ville = $ville;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSorties()
+    {
+        return $this->sorties;
+    }
+
+    /**
+     * @param mixed $sorties
+     * @return Lieu
+     */
+    public function setSorties($sorties)
+    {
+        $this->sorties = $sorties;
+        return $this;
+    }
+
+
     public function getId(): ?int
     {
         return $this->id;

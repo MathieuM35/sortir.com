@@ -53,6 +53,31 @@ class Sortie
      */
     private $etat;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Lieu", inversedBy="sorties")
+     */
+    private $lieu;
+
+    /**
+     * @return mixed
+     */
+    public function getLieu()
+    {
+        return $this->lieu;
+    }
+
+    /**
+     * @param mixed $lieu
+     * @return Sortie
+     */
+    public function setLieu($lieu)
+    {
+        $this->lieu = $lieu;
+        return $this;
+    }
+
+
+
     public function getId(): ?int
     {
         return $this->id;
