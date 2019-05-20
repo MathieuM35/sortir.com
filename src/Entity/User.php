@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\Table(name="app_user")
  */
 class User
 {
@@ -50,6 +51,29 @@ class User
      * @ORM\ManyToOne(targetEntity="App\Entity\Site", inversedBy="users")
      */
     private $site;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Sortie", mappedBy="organisateur")
+     */
+    private $sortiesOrganise;
+
+    /**
+     * @return mixed
+     */
+    public function getSortiesOrganise()
+    {
+        return $this->sortiesOrganise;
+    }
+
+    /**
+     * @param mixed $sortiesOrganise
+     * @return User
+     */
+    public function setSortiesOrganise($sortiesOrganise)
+    {
+        $this->sortiesOrganise = $sortiesOrganise;
+        return $this;
+    }
 
     /**
      * @return mixed

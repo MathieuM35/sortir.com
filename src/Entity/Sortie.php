@@ -48,10 +48,55 @@ class Sortie
     private $infosSortie;
 
     /**
-     *
      * @ORM\ManyToOne(targetEntity="App\Entity\Etat", inversedBy="sorties")
      */
     private $etat;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="sortiesOrganise")
+     */
+    private $organisateur;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\User")
+     */
+    private $participants;
+
+    /**
+     * @return mixed
+     */
+    public function getOrganisateur()
+    {
+        return $this->organisateur;
+    }
+
+    /**
+     * @param mixed $organisateur
+     * @return Sortie
+     */
+    public function setOrganisateur($organisateur)
+    {
+        $this->organisateur = $organisateur;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParticipants()
+    {
+        return $this->participants;
+    }
+
+    /**
+     * @param mixed $participants
+     * @return Sortie
+     */
+    public function setParticipants($participants)
+    {
+        $this->participants = $participants;
+        return $this;
+    }
 
     public function getId(): ?int
     {
