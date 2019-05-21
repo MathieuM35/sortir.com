@@ -18,16 +18,4 @@ class MainController extends Controller
             'controller_name' => 'MainController',
         ]);
     }
-
-    /**
-     * Afficher sur la page d'accueil l'ensemble de toutes les sorties présentes en BDD
-     * @Route("/",name="liste_sorties")
-     * @Template()
-     */
-    public function listeToutesSorties(){
-        $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
-        $sorties = $sortieRepo->findAll();
-        return (['sorties'=>$sorties]);
-
-    }
 }
