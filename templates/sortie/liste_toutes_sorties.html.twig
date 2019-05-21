@@ -10,37 +10,36 @@
         <div class="alert alert-success" role="alert">
             Il y a {{ sorties|length }} sortie(s) correspondant à votre recherche !
         </div>
-        {% else %}
-            <div class="alert alert-warning" role="alert">
-                Il y a pas de sortie correspondant à votre recherche !
-            </div>
+    {% else %}
+        <div class="alert alert-warning" role="alert">
+            Il y a pas de sortie correspondant à votre recherche !
+        </div>
     {% endif %}
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Nom de la sortie</th>
+                <th scope="col">Date de la sortie</th>
+                <th scope="col">Clôture</th>
+                <th scope="col">Inscrit/places</th>
+                <th scope="col">Etat</th>
+                <th scope="col">Inscrit</th>
+                <th scope="col">Organisateur</th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
 
-<table class="table table-striped">
-    <thead>
-    <tr>
-        <th scope="col">Nom de la sortie</th>
-        <th scope="col">Date de la sortie</th>
-        <th scope="col" class="hidden-sm">Clôture</th>
-        <th scope="col" class="hidden-sm">Inscrit/places</th>
-        <th scope="col" class="hidden-sm">Etat</th>
-        <th scope="col" class="hidden-sm">Inscrit</th>
-        <th scope="col" class="hidden-sm">Organisateur</th>
-        <th scope="col"></th>
-    </tr>
-    </thead>
-
-    {% for sortie in sorties %}
-        <tr>
-            <td>{{ sortie.nom }}</td>
-            <td>{{ sortie.dateHeureDebut|date("d/m/Y h:i") }}</td>
-            <td class="hidden-sm">{{ sortie.dateLimiteInscription|date("d/m/Y") }}</td>
-            <td class="hidden-sm">{{ sortie.nbInscriptionsMax }}</td>
-            <td class="hidden-sm">{{ sortie.etat.libelle }}</td>
-            <td></td>
-            <td></td>
-            <td><a href="{{ path('sortie_details',{'id':sortie.id}) }}">Voir les détails</a></td>
-        </tr>
-    {% endfor %}
-</table>
+            {% for sortie in sorties %}
+                <tr>
+                    <td>{{ sortie.nom }}</td>
+                    <td>{{ sortie.dateHeureDebut|date("d/m/Y h:i") }}</td>
+                    <td>{{ sortie.dateLimiteInscription|date("d/m/Y") }}</td>
+                    <td>{{ sortie.nbInscriptionsMax }}</td>
+                    <td>{{ sortie.etat.libelle }}</td>
+                    <td></td>
+                    <td></td>
+                    <td><a href="{{ path('sortie_details',{'id':sortie.id}) }}">Voir les détails</a></td>
+                </tr>
+            {% endfor %}
+        </table>
 {% endblock %}
