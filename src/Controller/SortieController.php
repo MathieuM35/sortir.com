@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
 use App\Entity\Sortie;
+use App\Entity\Ville;
 use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -31,11 +33,14 @@ class SortieController extends Controller
                         EntityManagerInterface $em)
     {
         $sortie = new Sortie();
-        $sortie->setEtat('Créée');
+        $etatRepo = $this->getDoctrine()->getRepository(Etat::class);
+        $sortie->setEtat($etatRepo->find(1));
         $sortie->setOrganisateur($this->getUser());
         $sortie->setParticipants(array());
 
-        $formSortie = $this->createForm(SortieType::class, $sortie);
+        $villes = $em->getRepository(Ville::class)->findAll();
+
+        $formSortie = $this->createForm(SortieType::class, $sortie, array('villes'=>$villes));
         $formSortie->handleRequest($request);
 
         if ($formSortie->isSubmitted() && $formSortie->isValid()) {
@@ -43,11 +48,26 @@ class SortieController extends Controller
             $em->flush();
 
             $this->addFlash("success", "Votre sortie a bien été ajoutée !");
-            return $this->redirectToRoute("details", ['id' => $sortie->getId()]);
+            return $this->redirectToRoute("liste_sorties");
         } else {
             return (['formSortie'=>$formSortie->createView()]);
         }
+    }
 
+    /**
+     * @param $id id la sortie à afficher
+     * @Route("/sortie/{id}", name="sortie_details")
+     */
+    public function details($id){
+        //on récupère la sortie selon l'id en paramèrte
+        $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
+        $sortie = $sortieRepo->find($id);
 
+        //si aucune sortie n'est trouvée avec cet idée, on lève une exception
+        if(empty($sortie)){
+            throw  $this->createNotFoundException("Cette sortie n'existe pas");
+        }
+
+        return $this->render('sortie/details.html.twig',['sortie'=>$sortie]);
     }
 }

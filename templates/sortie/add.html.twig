@@ -1,6 +1,13 @@
 {{ form_start(formSortie) }}
 
-{{ form_widget(formSortie) }}
+{{ form_row(formSortie.nom) }}
+{{ form_row(formSortie.dateHeureDebut) }}
+{{ form_row(formSortie.dateLimiteInscription) }}
+{{ form_row(formSortie.nbInscriptionsMax) }}
+{{ form_row(formSortie.duree) }}
+{{ form_row(formSortie.infosSortie) }}
+{{ form_row(formSortie.ville) }}
+{{ form_row(formSortie.lieu) }}
 
 
 <button type="submit">Ajouter</button>
