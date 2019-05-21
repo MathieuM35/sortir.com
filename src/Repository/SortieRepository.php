@@ -33,11 +33,18 @@ class SortieRepository extends ServiceEntityRepository
             $qb->andWhere('s.nom LIKE :nomContient');
             $qb->setParameter('nomContient', '%' . $criteres['nomContient'] . '%');
         }
-        if ($criteres['periodeDebut']) {
-            //TODO
+        if ($criteres['periodeDebut'] && $criteres['periodeFin']) {
+            $qb->andWhere('s.dateHeureDebut BETWEEN :periodeDebut AND :periodeFin');
+            $qb->setParameter('periodeDebut', $criteres['periodeDebut']);
+            $qb->setParameter('periodeFin',$criteres['periodeFin']);
         }
-        if ($criteres['periodeFin']) {
-            //TODO
+        if ($criteres['periodeDebut'] && empty($criteres['periodeFin'])) {
+            $qb->andWhere('s.dateHeureDebut > :periodeDebut');
+            $qb->setParameter('periodeDebut', $criteres['periodeDebut']);
+        }
+        if ($criteres['periodeFin'] && empty($criteres['periodeDebut'])) {
+            $qb->andWhere('s.dateHeureDebut < :periodeFin');
+            $qb->setParameter('periodeFin', $criteres['periodeFin']);
         }
         if ($criteres['organisateur']) {
             //TODO
@@ -49,7 +56,8 @@ class SortieRepository extends ServiceEntityRepository
             //TODO
         }
         if ($criteres['sortiePassee']) {
-            //TODO
+            $qb->andWhere('s.dateHeureDebut < :aujourdhui');
+            $qb->setParameter('aujourdhui', new \DateTime());
         }
 
         //on effectue la requete

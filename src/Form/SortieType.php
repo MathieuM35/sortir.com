@@ -25,7 +25,7 @@ class SortieType extends AbstractType
             ->add('dateHeureDebut', DateTimeType::class, ['widget' => 'single_text'])
             ->add('dateLimiteInscription', DateType::class, ['widget' => 'single_text'])
             ->add('nbInscriptionsMax', IntegerType::class)
-            ->add('duree', IntegerType::class)
+            ->add('duree', IntegerType::class, ['label'=>'Durée (en min)'])
             ->add('infosSortie', TextareaType::class)
             ->add('ville', EntityType::class, [
                 'class' => Ville::class,
@@ -36,6 +36,7 @@ class SortieType extends AbstractType
                 'class' => Lieu::class,
                 'choice_label' => 'nom',
             ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

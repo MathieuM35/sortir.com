@@ -6,6 +6,16 @@
     {{ form_widget(rechercheForm) }}
     {{ form_end(rechercheForm) }}
 
+    {% if sorties|length > 0 %}
+        <div class="alert alert-success" role="alert">
+            Il y a {{ sorties|length }} sortie(s) correspondant à votre recherche !
+        </div>
+        {% else %}
+            <div class="alert alert-warning" role="alert">
+                Il y a pas de sortie correspondant à votre recherche !
+            </div>
+    {% endif %}
+
 <table class="table table-striped">
     <thead>
     <tr>
