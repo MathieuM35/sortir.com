@@ -1,0 +1,11 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Enregistrer un utilisateur{% endblock %}
+{% block main %}
+
+    <h1>Enregistrer un utilisateur</h1>
+    {{ form_start(registerForm) }}
+    {{ form_widget(registerForm) }}
+    <button type="submit">Enregistrer</button>
+    {{ form_end(registerForm) }}
+
+{% endblock %}

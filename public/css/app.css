@@ -1,0 +1,53 @@
+body{
+    font-family: 'Oswald', sans-serif;
+    background-color: #b9bbbe;
+}
+
+h1{
+    font-size: 60px;
+    text-align: center;
+    vertical-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: #0c5460;
+    background-color: #818182;
+    border-radius: 5px;
+}
+
+h2{
+    text-align: center;
+    color: #138496;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+main>p{
+    text-align: justify;
+}
+
+footer{
+    text-align: center;
+    color: #4e555b;
+}
+
+div[type="hidden"]{
+    display: none;
+}
+
+.flash{
+    padding: 20px;
+    display: block;
+    font-size: 24px;
+    color: #FFF;
+    font-weight: bold;
+}
+
+.flash-success{
+    background-color: #6b9311;
+}
+
+.flash-error{
+    background-color: #AA3333;
+}

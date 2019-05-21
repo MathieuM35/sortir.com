@@ -1,0 +1,17 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Connecter un utilisateur{% endblock %}
+{% block main %}
+
+    <h1>Login user</h1>
+    <form method="post">
+
+        <label for="username">Identifiant :</label>
+        <input type="text" name="_username" id="username">
+
+        <label for="password">Mot de passe :</label>
+        <input type="password" name="_password" id="password">
+
+        <button type="submit">Login</button>
+    </form>
+
+{% endblock %}

@@ -1,0 +1,14 @@
+<nav class="nav-link active">
+        <a href="{{ path('home') }}">Accueil</a>
+        <a href="{{ path('user-register') }}">Créer un profil</a>
+        <a href="{{ path('login') }}">Se connecter</a>
+        <a href="{{ path('user-register') }}">Créer un profil</a>
+        <a href="{{ path('site') }}">Liste des sites</a>
+
+        {#{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            <li><a href="{{ path('') }}"></a></li>
+            <li><a href="{{ path('logout') }}">Deconnexion</a></li>
+        {% else %}
+            <li><a href="{{ path('login') }}">Se connecter</a></li>
+        {% endif %}#}
+</nav>
