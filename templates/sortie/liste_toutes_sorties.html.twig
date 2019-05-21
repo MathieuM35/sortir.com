@@ -1,3 +1,11 @@
+{% extends 'layout.html.twig' %}
+
+{% block main %}
+
+    {{ form_start(rechercheForm) }}
+    {{ form_widget(rechercheForm) }}
+    {{ form_end(rechercheForm) }}
+
 <table class="table table-striped">
     <thead>
     <tr>
@@ -25,3 +33,4 @@
         </tr>
     {% endfor %}
 </table>
+{% endblock %}
