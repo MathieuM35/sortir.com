@@ -33,12 +33,12 @@ class UserController extends Controller
         $registerForm = $this->createForm(RegisterType::class, $user);
         $registerForm->handleRequest($request);
         if ($registerForm->isSubmitted() && $registerForm->isValid()){
-            //$hashed = $encoder->encodePassword($user, $user->getPassword());
-            //$user->setPassword($hashed);
+            $hashed = $encoder->encodePassword($user, $user->getPassword());
+            $user->setPassword($hashed);
             $em->persist($user);
             $em->flush();
             $this->addFlash("success", "utilisateur enregistré !");
-            $this->redirectToRoute("home");
+            $this->redirectToRoute("liste_sorties");
         }
 
         return $this->render("user/register.html.twig", ['registerForm'=>$registerForm->createView()]);
@@ -52,6 +52,13 @@ class UserController extends Controller
     public function login(){
 
         return $this->render("user/login.html.twig", []);
+    }
+
+    /**
+     * @Route("/logout", name="logout")
+     */
+    public function logout(){
+
     }
 
 }

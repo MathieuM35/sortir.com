@@ -1,14 +1,15 @@
 <nav class="nav-link active">
-        <a href="{{ path('home') }}">Accueil</a>
-        <a href="{{ path('user-register') }}">Créer un profil</a>
-        <a href="{{ path('login') }}">Se connecter</a>
-        <a href="{{ path('user-register') }}">Créer un profil</a>
-        <a href="{{ path('site') }}">Liste des sites</a>
+        <a href="{{ path('liste_sorties') }}">Accueil</a>
 
-        {#{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-            <li><a href="{{ path('') }}"></a></li>
-            <li><a href="{{ path('logout') }}">Deconnexion</a></li>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('user-register') }}">Créer un profil</a>
+            <a href="{{ path('site') }}">Liste des sites</a>
+            <a href="{{ path('site') }}">Liste des villes</a>
+        {% endif %}
+
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            <a href="{{ path('logout') }}">Déconnexion</a>
         {% else %}
-            <li><a href="{{ path('login') }}">Se connecter</a></li>
-        {% endif %}#}
+            <a href="{{ path('login') }}">Se connecter</a>
+        {% endif %}
 </nav>

@@ -7,6 +7,7 @@ use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,11 +16,11 @@ class RegisterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('username')
-            ->add('prenom')
-            ->add('nom')
-            ->add('telephone')
-            ->add('email', EmailType::class)
+            ->add('username', TextType::class, ['label'=>'Pseudo :', 'attr'=>['placeholder'=>'Veuillez renseigner le pseudo']])
+            ->add('prenom', TextType::class, ['label'=>'Prénom :', 'attr'=>['placeholder'=>'Veuillez renseigner le prénom']])
+            ->add('nom', TextType::class, ['label'=>'Nom :', 'attr'=>['placeholder'=>'Veuillez renseigner le nom']])
+            ->add('telephone',TextType::class, ['label'=>'Nom :', 'attr'=>['placeholder'=>'Veuillez renseigner le nom']])
+            ->add('email', EmailType::class, ['label'=>'Email :', 'attr'=>['placeholder'=>'Veuillez renseigner le mail']])
             ->add('administrateur')
             ->add('actif')
             ->add('site', EntityType::class, ['class' => Site::class, 'choice_label' => 'nom'])

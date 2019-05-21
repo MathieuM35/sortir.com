@@ -68,9 +68,26 @@ class User implements UserInterface
      */
     private $password;
 
+    /**
+     *
+     */
+    private $roles;
+
     public function getRoles()
     {
-        // TODO: Implement getRoles() method.
+        if ($this->getAdministrateur()){
+            return ["ROLE_USER", "ROLE_ADMIN"];
+        } else {
+            return ["ROLE_USER"];
+        }
+
+    }
+
+    public function setRoles(string $roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
     }
 
     public function getSalt()

@@ -3,9 +3,56 @@
 {% block main %}
 
     <h1>Enregistrer un utilisateur</h1>
-    {{ form_start(registerForm) }}
-    {{ form_widget(registerForm) }}
-    <button type="submit">Enregistrer</button>
-    {{ form_end(registerForm) }}
+    <div>
+        {{ form_start(registerForm) }}
+
+        <div class="group">
+            {{ form_label(registerForm.username) }}
+            {{ form_widget(registerForm.username) }}
+        </div>
+
+        <div class="group">
+            {{ form_label(registerForm.prenom) }}
+            {{ form_widget(registerForm.prenom) }}
+        </div>
+
+        <div class="group">
+            {{ form_label(registerForm.nom) }}
+            {{ form_widget(registerForm.nom) }}
+        </div>
+
+        <div class="group">
+            {{ form_label(registerForm.telephone) }}
+            {{ form_widget(registerForm.telephone) }}
+        </div>
+
+        <div class="group">
+            {{ form_label(registerForm.email) }}
+            {{ form_widget(registerForm.email) }}
+        </div>
+
+        <div class="group">
+            {{ form_label(registerForm.administrateur) }}
+            {{ form_widget(registerForm.administrateur) }}
+        </div>
+
+        <div class="group">
+            {{ form_label(registerForm.actif) }}
+            {{ form_widget(registerForm.actif) }}
+        </div>
+
+        <div class="group">
+            {{ form_label(registerForm.email) }}
+            {{ form_widget(registerForm.email) }}
+        </div>
+
+        <div class="group">
+            {{ form_label(registerForm.site) }}
+            {{ form_widget(registerForm.site) }}
+        </div>
+
+        <button type="submit">Enregistrer</button>
+        {{ form_end(registerForm) }}
+    </div>
 
 {% endblock %}
