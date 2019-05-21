@@ -3,32 +3,41 @@
 {% block main %}
 
 
-<div class="row">
-    <div class="col-12">
-        <h2>Détails de la sortie {{ sortie.nom }}</h2>
+    <div class="row">
+        <div class="col-12">
+            <h2>Détails de la sortie {{ sortie.nom }}</h2>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-6">
-        <p>Nom de la sortie : {{ sortie.nom }}</p>
-        <p>Date et heure de la sortie : {{ sortie.dateHeureDebut|date("d/m/Y à h:i") }}</p>
-        <p>Date limite d'inscription : {{ sortie.dateLimiteInscription|date("d/m/Y") }}</p>
-        <p>Nombre de place : {{ sortie.nbInscriptionsMax }}</p>
-        <p>Durée : {{ sortie.duree }}</p>
-        <p>Description et infos : {{ sortie.infosSortie }}</p>
-    </div>
-    <div class="col-6">
-        <p>Ville organisatrice : </p>
-        <p>Lieu : {{ sortie.lieu.nom }}</p>
-        <p>Rue : {{ sortie.lieu.rue }}</p>
-        <p>Code postal : {{ sortie.lieu.ville.codePostal }}</p>
-        <p>Latitude : {{ sortie.lieu.latitude }}</p>
-        <p>Longitude : {{ sortie.lieu.longitude }}</p>
-    </div>
-    <hr>
+    <div class="row">
+        <div class="col-6">
+            <p>Nom de la sortie : {{ sortie.nom }}</p>
+            <p>Date et heure de la sortie : {{ sortie.dateHeureDebut|date("d/m/Y à h:i") }}</p>
+            <p>Date limite d'inscription : {{ sortie.dateLimiteInscription|date("d/m/Y") }}</p>
+            <p>Nombre de place : {{ sortie.nbInscriptionsMax }}</p>
+            <p>Durée : {{ sortie.duree }}</p>
+            <p>Description et infos : {{ sortie.infosSortie }}</p>
+        </div>
+        <div class="col-6">
+            <p>Ville organisatrice : </p>
+            <p>Lieu : {{ sortie.lieu.nom }}</p>
+            <p>Rue : {{ sortie.lieu.rue }}</p>
+            <p>Code postal : {{ sortie.lieu.ville.codePostal }}</p>
+            <p>Latitude : {{ sortie.lieu.latitude }}</p>
+            <p>Longitude : {{ sortie.lieu.longitude }}</p>
+        </div>
+        <hr>
 
-    <h3>Liste des participants inscrits</h3>
+        <h3>Liste des participants inscrits</h3>
 
-</div>
+    </div>
+
+    {# affichage d'un plan google map si latitude et longitude sont définies #}
+    {% if sortie.lieu.latitude is not null and sortie.lieu.longitude is not null %}
+    <div>
+        <iframe src="http://maps.google.com/maps?q={{ sortie.lieu.latitude }}, {{ sortie.lieu.longitude }}&z=15&output=embed"
+                width="360" height="270" frameborder="0" style="border:0"></iframe>
+    </div>
+    {% endif %}
+
 
 {% endblock %}
