@@ -31,6 +31,25 @@ class Ville
      */
     private $lieux;
 
+    /**
+     * @return mixed
+     */
+    public function getLieux()
+    {
+        return $this->lieux;
+    }
+
+    /**
+     * @param mixed $lieux
+     * @return Ville
+     */
+    public function setLieux($lieux)
+    {
+        $this->lieux = $lieux;
+        return $this;
+    }
+
+
     public function getId(): ?int
     {
         return $this->id;
