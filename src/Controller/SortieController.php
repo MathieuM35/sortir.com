@@ -76,7 +76,6 @@ class SortieController extends Controller
     {
         $sortie = new Sortie();
         $etatRepo = $this->getDoctrine()->getRepository(Etat::class);
-        $sortie->setEtat($etatRepo->find(1));
         $sortie->setOrganisateur($this->getUser());
         $sortie->setParticipants(array());
 
@@ -86,6 +85,16 @@ class SortieController extends Controller
         $formSortie->handleRequest($request);
 
         if ($formSortie->isSubmitted() && $formSortie->isValid()) {
+            //on set un état différent en fonction du bouton submit cliqué (Enregistrer ou Publier)
+            //si clic sur le bouton Enregister on set l'état 'En création'
+            if($formSortie->get('enregister')->isClicked()){
+                $sortie->setEtat($etatRepo->find(1));
+            }
+            //si clic sur le bouton Publier on set l'état 'Ouverte'
+            if($formSortie->get('publier')->isClicked()){
+                $sortie->setEtat($etatRepo->find(2));
+            }
+            //insertion en BDD
             $em->persist($sortie);
             $em->flush();
 
