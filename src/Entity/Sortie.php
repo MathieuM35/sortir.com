@@ -57,25 +57,6 @@ class Sortie
      */
     private $lieu;
 
-    /**
-     * @return mixed
-     */
-    public function getLieu()
-    {
-        return $this->lieu;
-    }
-
-    /**
-     * @param mixed $lieu
-     * @return Sortie
-     */
-    public function setLieu($lieu)
-    {
-        $this->lieu = $lieu;
-        return $this;
-    }
-
-
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="sortiesOrganise")
@@ -83,9 +64,11 @@ class Sortie
     private $organisateur;
 
     /**
+     * Participants à la sortie
      * @ORM\ManyToMany(targetEntity="App\Entity\User")
      */
     private $participants;
+
 
     /**
      * @return mixed
@@ -103,6 +86,26 @@ class Sortie
     {
         $this->organisateur = $organisateur;
         return $this;
+    }
+
+    /**
+     * Ajouter un participant à la sortie
+     * @param User $user
+     */
+    public function addParticipant(User $user)
+    {
+        $this->participants[] = $user;
+    }
+
+    /**
+     * Supprimer un participant d'une sortie
+     * @param User $user
+     */
+    public function removeParticipant(User $user)
+    {
+        if($this->participants->contains($user)){
+            $this->participants->removeElement($user);
+        }
     }
 
     /**
@@ -211,4 +214,23 @@ class Sortie
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getLieu()
+    {
+        return $this->lieu;
+    }
+
+    /**
+     * @param mixed $lieu
+     * @return Sortie
+     */
+    public function setLieu($lieu)
+    {
+        $this->lieu = $lieu;
+        return $this;
+    }
+
 }

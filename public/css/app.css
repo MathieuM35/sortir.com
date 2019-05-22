@@ -51,3 +51,8 @@ div[type="hidden"]{
 .flash-error{
     background-color: #AA3333;
 }
+
+.inscrit{
+    text-align: center;
+    color: green;
+}

@@ -2,12 +2,17 @@
 
 {% block main %}
 
-
     <div class="row">
         <div class="col-12">
             <h2>Détails de la sortie {{ sortie.nom }}</h2>
+            <p>organisé par {{ sortie.organisateur.username }}</p>
+            {% if app.user is same as(sortie.organisateur) %}
+                <p style="text-align: center"><span class="badge badge-secondary">Vous etes l'organisateur de cette sortie</span>
+                </p>
+            {% endif %}
         </div>
     </div>
+
     <div class="row">
         <div class="col-6">
             <p>Nom de la sortie : {{ sortie.nom }}</p>
@@ -18,26 +23,90 @@
             <p>Description et infos : {{ sortie.infosSortie }}</p>
         </div>
         <div class="col-6">
-            <p>Ville organisatrice : </p>
+            {% if sortie.organisateur is not null %}
+                <p>Ville organisatrice : {{ sortie.organisateur.site.nom }}</p>
+            {% endif %}
             <p>Lieu : {{ sortie.lieu.nom }}</p>
             <p>Rue : {{ sortie.lieu.rue }}</p>
             <p>Code postal : {{ sortie.lieu.ville.codePostal }}</p>
-            <p>Latitude : {{ sortie.lieu.latitude }}</p>
-            <p>Longitude : {{ sortie.lieu.longitude }}</p>
+            {% if sortie.lieu.latitude is not null %}
+                <p>Latitude : {{ sortie.lieu.latitude }}</p>
+            {% endif %}
+            {% if sortie.lieu.longitude is not null %}
+                <p>Longitude : {{ sortie.lieu.longitude }}</p>
+            {% endif %}
         </div>
-        <hr>
+    </div>
 
+
+    <!-- affichage boutons -->
+    <div class="row">
+        {# S'INSCRIRE #}
+        {# si l'utilisateur courant n'est pas l'organisateur et n'est pas déjà inscrit, il peut s'inscrire #}
+        {% if app.user is not same as(sortie.organisateur) and app.user not in sortie.participants %}
+            {# si la date de cloture des inscription n'est pas dépassée #}
+            {% if date(sortie.dateLimiteInscription) > date() %}
+                <a href="{{ url('inscription',{'id':sortie.id}) }}">
+                    <button type="button" class="btn btn-primary">S'inscrire</button>
+                </a>
+            {% elseif date(sortie.dateLimiteInscription) < date() %}
+                <div class="alert alert-warning" role="alert">
+                    Les inscriptions sont clôturées
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {# SE DESISTER #}
+        {# si l'utilisateur courant n'est pas l'organisateur et est déjà inscrit, il peut se désister #}
+        {% if app.user is not same as(sortie.organisateur) and app.user in sortie.participants %}
+            <a href="{{ url('desistement',{'id':sortie.id}) }}">
+                <button type="button" class="btn btn-primary">Se désister</button>
+            </a>
+        {% endif %}
+
+        {# MODIFIER LA SORTIE #} {# ANNULER LA SORTIE #}
+        {# Si l'utilisateur courant est l'ORGANISATEUR #}
+        {% if app.user is same as(sortie.organisateur) %}
+            <a href="{{ url('modification',{'id':sortie.id}) }}">
+                <button type="button" class="btn btn-primary">Modifier la sortie</button>
+            </a>
+            <a href="{{ url('annulation',{'id':sortie.id}) }}">
+                <button type="button" class="btn btn-danger">Supprimer la sortie</button>
+            </a>
+        {% endif %}
+
+    </div>
+
+
+    <!-- affichage des participants -->
+    <div class="row">
         <h3>Liste des participants inscrits</h3>
-
+        <hr>
+        <div class="col-12">
+            <table class="table">
+                <thead>
+                <th>Pseudo</th>
+                <th>Nom</th>
+                </thead>
+                {% for participant in sortie.participants %}
+                    <tr>
+                        <td>{{ participant.username }}</td>
+                        <td>{{ participant.username }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
 
-    {# affichage d'un plan google map si latitude et longitude sont définies #}
-    {% if sortie.lieu.latitude is not null and sortie.lieu.longitude is not null %}
-    <div>
-        <iframe src="http://maps.google.com/maps?q={{ sortie.lieu.latitude }}, {{ sortie.lieu.longitude }}&z=15&output=embed"
-                width="360" height="270" frameborder="0" style="border:0"></iframe>
+    <!-- affichage carte Google Map -->
+    <div class="row">
+        {# affichage d'un plan google map si latitude et longitude sont définies #}
+        {% if sortie.lieu.latitude is not null and sortie.lieu.longitude is not null %}
+            <div>
+                <iframe src="http://maps.google.com/maps?q={{ sortie.lieu.latitude }}, {{ sortie.lieu.longitude }}&z=15&output=embed"
+                        width="360" height="270" frameborder="0" style="border:0"></iframe>
+            </div>
+        {% endif %}
     </div>
-    {% endif %}
-
 
 {% endblock %}
