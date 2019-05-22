@@ -3,6 +3,9 @@
 {% block main %}
 
     <h1>Login user</h1>
+    {#{% if erreur %}
+        <div>{{ erreur.message }}</div>
+    {% endif %}#}
     <form method="post">
 
         <label for="username">Identifiant :</label>
@@ -11,7 +14,11 @@
         <label for="password">Mot de passe :</label>
         <input type="password" name="_password" id="password">
 
-        <button type="submit">Login</button>
+        <button type="submit">Connexion</button>
+        <label>
+            <input type="checkbox" name="_remember_me" checked>
+            Se souvenir de moi
+        </label>
     </form>
 
 {% endblock %}
