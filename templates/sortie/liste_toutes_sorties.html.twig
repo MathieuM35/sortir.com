@@ -1,18 +1,36 @@
 {% extends 'layout.html.twig' %}
 
 {% block main %}
+    <div class="row">
 
-    {{ form_start(rechercheForm) }}
-    <label for="recherche_sortie[site]">Site : </label>
-    {{ form_row(rechercheForm.site) }}
-    <label for="recherche_sortie[nomContient]">Le nom de la sortie contient : </label>
-    {{ form_row(rechercheForm.nomContient) }}
-    <label for="recherche_sortie[periodeDebut]">Du :</label>
-    {{ form_row(rechercheForm.periodeDebut) }}
-    <label for="recherche_sortie[periodeFin]">Au : </label>
-    {{ form_row(rechercheForm.periodeFin) }}
-    {{ form_end(rechercheForm) }}
+        <div class="col-12 col-md-6">
+            {{ form_start(rechercheForm) }}
+            <label for="recherche_sortie[site]">Site : </label>
+            {{ form_row(rechercheForm.site) }}
+            <label for="recherche_sortie[nomContient]">Le nom de la sortie contient : </label>
+            {{ form_row(rechercheForm.nomContient) }}
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <label for="recherche_sortie[periodeDebut]">Du :</label>
+                    {{ form_row(rechercheForm.periodeDebut) }}
+                </div>
+                <div class="col-12 col-md-6">
+                    <label for="recherche_sortie[periodeFin]">Au : </label>
+                    {{ form_row(rechercheForm.periodeFin) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            {{ form_row(rechercheForm.organisateur) }}
+            {{ form_row(rechercheForm.inscrit) }}
+            {{ form_row(rechercheForm.nonInscrit) }}
+            {{ form_row(rechercheForm.sortiePassee) }}
+            {{ form_widget(rechercheForm.rechercher, { 'label': 'Rechercher' }) }}
+            {{ form_end(rechercheForm) }}
+        </div>
 
+
+    </div>
     {% if sorties|length > 0 %}
         <p>Nous vous proposons ces {{ sorties|length }} sortie(s) :</p>
     {% else %}

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Etat;
 use App\Entity\Sortie;
 use App\Entity\Ville;
+use App\Form\AnnulationType;
 use App\Form\RechercheSortieType;
 use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -12,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SortieController extends Controller
 {
@@ -23,9 +25,12 @@ class SortieController extends Controller
      */
     public function listeToutesSorties(Request $request)
     {
-
+        //par defaut on récupère toutes les sorties
         $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
         $sorties = $sortieRepo->findAll();
+
+        //on récupère le current user
+        $user = $this->getUser();
 
         //formulaire de recherche de sorties
         $rechercheForm = $this->createForm(RechercheSortieType::class);
@@ -36,8 +41,8 @@ class SortieController extends Controller
             //$criteres contient les réponses au formulaire
             $criteres = $rechercheForm->getData();
             //on fait appel à une methode perso dans le repository
-            $sorties = $sortieRepo->findSortiesSelonRecherche($criteres);
-            $this->addFlash("success", "Il y a ". sizeof($sorties)  ." sortie(s) correspondant à votre recherche !");
+            $sorties = $sortieRepo->findSortiesSelonRecherche($criteres, $user);
+            $this->addFlash("success", "Il y a " . sizeof($sorties) . " sortie(s) correspondant à votre recherche !");
         } else {
             //si aucun critère renseigné, on affiche toutes les sorties de la BDD
             $sorties = $sortieRepo->findAll();
@@ -124,7 +129,7 @@ class SortieController extends Controller
             $em->flush();
             $this->addFlash("success", "Vous êtes inscrit à la sortie " . $sortie->getNom() . " !");
         } else {
-            $this->addFlash("alert", "Il n'y a plus de place pour la sortie " . $sortie->getNom());
+            $this->addFlash("danger", "Il n'y a plus de place pour la sortie " . $sortie->getNom());
         }
 
         return $this->redirectToRoute("liste_sorties");
@@ -154,9 +159,40 @@ class SortieController extends Controller
      * @param $id
      * @param EntityManagerInterface $em
      */
-    public function modification($id, EntityManagerInterface $em){
-        //TODO
-        //vérifier que l'utilisateur courant est bien l'organisateur de la sortie
+    public function modification($id, EntityManagerInterface $em, Request $request)
+    {
+        //récupération de la sortie concernée en fonction de l'id en paramètre
+        $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
+        $sortie = $sortieRepo->find($id);
+
+        //on vérifie que l'utilisateur courant est bien l'organisateur de la sortie
+        $user = $this->getUser();
+        if ($user == $sortie->getOrganisateur()) {
+            //Récupération du formulaire de sortie
+            $formSortie = $this->createForm(SortieType::class, $sortie);
+            $formSortie->handleRequest($request);
+
+            //traitement du form
+            if ($formSortie->isSubmitted() && $formSortie->isValid()) {
+                $messageFlash = "Sortie mise à jour";
+                //si clic sur le bouton Publier on set l'état 'Ouverte'
+                if ($formSortie->get('publier')->isClicked()) {
+                    $etatRepo = $this->getDoctrine()->getRepository(Etat::class);
+                    $sortie->setEtat($etatRepo->find(2));
+                    $messageFlash .= " et publiée !";
+                }
+
+                $em->persist($sortie);
+                $em->flush();
+                $this->addFlash("success", $messageFlash);
+                $this->redirectToRoute("sortie_details", ['id' => $sortie->getId()]);
+            }
+            return $this->render("sortie/modification.html.twig", [
+                'formSortie' => $formSortie->createView(),
+                'idSortie' => $sortie->getId(),
+                'sortie' => $sortie,
+            ]);
+        }
     }
 
     /**
@@ -165,9 +201,24 @@ class SortieController extends Controller
      * @param $id
      * @param EntityManagerInterface $em
      */
-    public function annulation($id, EntityManagerInterface $em){
-        //TODO
-        //vérifier que l'utilisateur courant est bien l'organisateur de la sortie
+    public
+    function annulation($id, EntityManagerInterface $em)
+    {
+        //récupération de la sortie concernée en fonction de l'id en paramètre
+        $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
+        $sortie = $sortieRepo->find($id);
+
+        //on vérifie que l'utilisateur courant est bien l'organisateur de la sortie
+        $user = $this->getUser();
+        if ($user == $sortie->getOrganisateur()) {
+            $formAnnulation = $this->createForm(AnnulationType::class);
+
+            return $this->render("sortie/annulation.html.twig", [
+                'formAnnulation' => $formAnnulation->createView(),
+                'idSortie' => $sortie->getId(),
+                'sortie' => $sortie,
+            ]);
+        }
     }
 
 }

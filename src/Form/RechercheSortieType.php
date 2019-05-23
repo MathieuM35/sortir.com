@@ -4,10 +4,12 @@ namespace App\Form;
 
 use App\Entity\Site;
 use App\Entity\Ville;
+use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SearchType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -23,6 +25,8 @@ class RechercheSortieType extends AbstractType
                 'class' => Site::class,
                 'choice_label' => 'nom',
                 'required' => false,
+                'multiple' => false,
+                'placeholder' => 'Choisir un site',
             ])
             ->add('nomContient', SearchType::class, [
                 'label' => 'Le nom de la sortie contient : ',
@@ -54,7 +58,14 @@ class RechercheSortieType extends AbstractType
                 'label' => 'Sorties passées',
                 'required' => false,
             ])
-            ->add('rechercher', SubmitType::class);
+            ->add('rechercher', SubmitType::class, [
+                'label' => 'Rechercher',
+                'attr' => ['class' => 'btn btn-primary btn-lg btn-block']
+            ])
+            ->add('reinitialiser', ResetType::class,[
+                'label'=>'Réinitialiser les champs',
+                'attr'=>['class'=>'btn btn-outline-secondary btn-sm btn-block']
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

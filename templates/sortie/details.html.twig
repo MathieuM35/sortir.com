@@ -5,7 +5,6 @@
     <div class="row">
         <div class="col-12">
             <h2>Détails de la sortie {{ sortie.nom }}</h2>
-            <p>organisé par {{ sortie.organisateur.username }}</p>
             {% if app.user is same as(sortie.organisateur) %}
                 <p style="text-align: center"><span class="badge badge-secondary">Vous etes l'organisateur de cette sortie</span>
                 </p>
