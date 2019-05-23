@@ -3,10 +3,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @UniqueEntity(fields={"username"})
  * @ORM\Table(name="app_user")
  */
 class User implements UserInterface
@@ -19,27 +22,37 @@ class User implements UserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank(message="Veuillez renseigner votre prénom svp !")
+     * @Assert\Length(min="2", max="50", minMessage="Le pseudo doit contenir au moins {{ limit }} caractères !", maxMessage="Le pseudo ne doit pas dépasser {{ limit }} caractères !")
+     * @ORM\Column(type="string", length=50, nullable=true, unique=true)
      */
     private $username;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank(message="Veuillez renseigner votre nom svp !")
+     * @Assert\Length(min="2", max="50", minMessage="Le nom doit contenir au moins {{ limit }} caractères !", maxMessage="Le nom ne doit pas dépasser {{ limit }} caractères !")
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @Assert\NotBlank(message="Veuillez renseigner votre prénom svp !")
+     * @Assert\Length(min="2", max="50", minMessage="Le prénom doit contenir au moins {{ limit }} caractères !", maxMessage="Le prénom ne doit pas dépasser {{ limit }} caractères !")
+     * @ORM\Column(type="string", length=50, nullable=true)
      */
     private $prenom;
 
     /**
-     * @ORM\Column(type="string", length=10)
+     * @Assert\NotBlank(message="Veuillez renseigner votre téléphone svp !")
+     * @Assert\Regex(pattern="/^\+31\(0\)[0-9]*$/", message="Le numéro de téléphone n'est pas valide")
+     * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="Veuillez renseigner votre adresse email svp !")
+     * @Assert\Email(message = "L'adresse email {{ value }} n'est pas valide.", checkMX = true)
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $email;
 
@@ -64,7 +77,8 @@ class User implements UserInterface
     private $sortiesOrganise;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @Assert\Length(min="2", max="50", minMessage="Le mot de passe doit contenir au moins {{ limit }} caractères !", maxMessage="Le mot de passe ne doit pas dépasser {{ limit }} caractères !")
+     * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $password;
 

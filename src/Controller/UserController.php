@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\ProfilType;
 use App\Form\RegisterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class UserController extends Controller
 {
@@ -52,9 +54,9 @@ class UserController extends Controller
         //Récupération de l'utilisateur connecté
         $user = $this->getUser();
         //Récupération du formulaire de l'utilisateur mis à jour
-        $registerForm = $this->createForm(RegisterType::class, $user);
-        $registerForm->handleRequest($request);
-        if ($registerForm->isSubmitted() && $registerForm->isValid()) {
+        $profilForm = $this->createForm(ProfilType::class, $user);
+        $profilForm->handleRequest($request);
+        if ($profilForm->isSubmitted() && $profilForm->isValid()) {
             $hashed = $encoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hashed);
             $em->persist($user);
@@ -63,16 +65,18 @@ class UserController extends Controller
             $this->redirectToRoute("liste_sorties");
         }
 
-        return $this->render("user/update.html.twig", ['registerForm'=>$registerForm->createView()]);
+        return $this->render("user/update.html.twig", ['profilForm'=>$profilForm->createView()]);
 
     }
 
     /**
      * @Route("/login", name="login")
      */
-    public function login(){
+    public function login(AuthenticationUtils $authUtils){
 
-        return $this->render("user/login.html.twig", []);
+        $erreur = $authUtils->getLastAuthenticationError();
+        $dernierPseudo = $authUtils->getLastUsername();
+        return $this->render("user/login.html.twig", ['dernier_pseudo' => $dernierPseudo, 'erreur' => $erreur]);
     }
 
     /**

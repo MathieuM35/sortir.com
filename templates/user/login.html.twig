@@ -3,9 +3,9 @@
 {% block main %}
 
     <h1>Login user</h1>
-    {#{% if erreur %}
-        <div>{{ erreur.message }}</div>
-    {% endif %}#}
+    {% if erreur %}
+        <div class="flash-error">{{ erreur.message }}</div>
+    {% endif %}
     <form method="post">
 
         <label for="username">Identifiant :</label>

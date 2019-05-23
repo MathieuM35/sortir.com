@@ -4,55 +4,52 @@
 
     <h1>Modifier mon profil</h1>
     <div>
-        {{ form_start(registerForm) }}
+        {{ form_start(profilForm) }}
 
         <div class="group">
-            {{ form_label(registerForm.username) }}
-            {{ form_widget(registerForm.username) }}
+            <label for="username">Pseudo :</label>
+            {{ form_label(profilForm.username) }}
+            {{ form_widget(profilForm.username) }}
         </div>
 
         <div class="group">
-            {{ form_label(registerForm.prenom) }}
-            {{ form_widget(registerForm.prenom) }}
+            <label for="prenom">Prénom :</label>
+            {{ form_label(profilForm.prenom) }}
+            {{ form_widget(profilForm.prenom) }}
         </div>
 
         <div class="group">
-            {{ form_label(registerForm.nom) }}
-            {{ form_widget(registerForm.nom) }}
+            <label for="nom">Nom :</label>
+            {{ form_label(profilForm.nom) }}
+            {{ form_widget(profilForm.nom) }}
         </div>
 
         <div class="group">
-            {{ form_label(registerForm.telephone) }}
-            {{ form_widget(registerForm.telephone) }}
+            <label for="telephone">Téléphone :</label>
+            {{ form_label(profilForm.telephone) }}
+            {{ form_widget(profilForm.telephone) }}
         </div>
 
         <div class="group">
-            {{ form_label(registerForm.email) }}
-            {{ form_widget(registerForm.email) }}
+            <label for="prenom">Email :</label>
+            {{ form_label(profilForm.email) }}
+            {{ form_widget(profilForm.email) }}
         </div>
 
         <div class="group">
-            {{ form_label(registerForm.password) }}
-            {{ form_widget(registerForm.password) }}
+            <label for="password">Mot de passe :</label>
+            {{ form_label(profilForm.password) }}
+            {{ form_widget(profilForm.password) }}
         </div>
 
         <div class="group">
-            {{ form_label(registerForm.administrateur) }}
-            {{ form_widget(registerForm.administrateur) }}
-        </div>
-
-        <div class="group">
-            {{ form_label(registerForm.actif) }}
-            {{ form_widget(registerForm.actif) }}
-        </div>
-
-        <div class="group">
-            {{ form_label(registerForm.site) }}
-            {{ form_widget(registerForm.site) }}
+            <label for="site">Site :</label>
+            {{ form_label(profilForm.site) }}
+            {{ form_widget(profilForm.site) }}
         </div>
 
         <button type="submit">Enregistrer</button>
-        {{ form_end(registerForm) }}
+        {{ form_end(profilForm) }}
     </div>
 
 {% endblock %}
