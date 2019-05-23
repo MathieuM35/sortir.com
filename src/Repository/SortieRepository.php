@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -22,13 +23,19 @@ class SortieRepository extends ServiceEntityRepository
     /**
      * Traite les critères de recherche et retourne un tableau de sorties correspondants à ces critères
      * @param $criteres criteres de recherche
+     * @param $user utilisateur connecté
      * @return mixed tableau des sorties correspondant aux critères de recherche
      */
-    public function findSortiesSelonRecherche($criteres)
+    public function findSortiesSelonRecherche($criteres, $user)
     {
         $qb = $this->createQueryBuilder('s');
 
         //on construit la requete selon les champs qui ont été complétés
+        if ($criteres['site']) {
+            //TODO
+            //$qb->andWhere('s.site = :site');
+            //$qb->setParameter('site', $criteres['site']);
+        }
         if ($criteres['nomContient']) {
             $qb->andWhere('s.nom LIKE :nomContient');
             $qb->setParameter('nomContient', '%' . $criteres['nomContient'] . '%');
@@ -36,7 +43,7 @@ class SortieRepository extends ServiceEntityRepository
         if ($criteres['periodeDebut'] && $criteres['periodeFin']) {
             $qb->andWhere('s.dateHeureDebut BETWEEN :periodeDebut AND :periodeFin');
             $qb->setParameter('periodeDebut', $criteres['periodeDebut']);
-            $qb->setParameter('periodeFin',$criteres['periodeFin']);
+            $qb->setParameter('periodeFin', $criteres['periodeFin']);
         }
         if ($criteres['periodeDebut'] && empty($criteres['periodeFin'])) {
             $qb->andWhere('s.dateHeureDebut > :periodeDebut');
@@ -47,10 +54,11 @@ class SortieRepository extends ServiceEntityRepository
             $qb->setParameter('periodeFin', $criteres['periodeFin']);
         }
         if ($criteres['organisateur']) {
-            //TODO
+            $qb->andWhere('s.organisateur = :organisateur');
+            $qb->setParameter('organisateur', $user);
         }
         if ($criteres['inscrit']) {
-            //TODO
+            //TODO leftjoin
         }
         if ($criteres['nonInscrit']) {
             //TODO
@@ -60,10 +68,25 @@ class SortieRepository extends ServiceEntityRepository
             $qb->setParameter('aujourdhui', new \DateTime());
         }
 
+        //on affiche les sorties selon leur date
+        $qb->orderBy('s.dateHeureDebut', 'ASC');
+
         //on effectue la requete
         $query = $qb->getQuery();
         $sorties = $query->getResult();
         return $sorties;
+    }
+
+    public function findParticipantsParSortie($idSortie=13)
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT participants
+            FROM App\Entity\Sortie s
+            WHERE s.id = 13";
+        $query = $em->createQuery($dql);
+        $results = $query->getResult();
+        return $results;
+
     }
 
 
