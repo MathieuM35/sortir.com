@@ -6,36 +6,76 @@
         <div class="col-12">
             <h2>Détails de la sortie {{ sortie.nom }}</h2>
             {% if app.user is same as(sortie.organisateur) %}
-                <p style="text-align: center"><span class="badge badge-secondary">Vous etes l'organisateur de cette sortie</span>
+                <p style="text-align: center"><span class="badge badge-secondary">Vous avez publié cette sortie</span>
                 </p>
             {% endif %}
         </div>
     </div>
+    {% if sortie.etat.id == 6 %} {# sortie.etat.id == 6 corresponda à "Annulée" #}
+        <div class="row">
+            <div class="alert alert-warning col-12" role="alert">
+                <p>Cette sortie a été annulée par son organisateur.<br>
+                    Motif de l'annulation : {{ sortie.motifAnnulation }}</p>
+            </div>
+        </div>
+    {% endif %}
 
     <div class="row">
-        <div class="col-6">
-            <p>Nom de la sortie : {{ sortie.nom }}</p>
-            <p>Date et heure de la sortie : {{ sortie.dateHeureDebut|date("d/m/Y à h:i") }}</p>
-            <p>Date limite d'inscription : {{ sortie.dateLimiteInscription|date("d/m/Y") }}</p>
-            <p>Nombre de place : {{ sortie.nbInscriptionsMax }}</p>
-            <p>Durée : {{ sortie.duree }}</p>
-            <p>Description et infos : {{ sortie.infosSortie }}</p>
-        </div>
-        <div class="col-6">
-            {% if sortie.organisateur is not null %}
-                <p>Ville organisatrice : {{ sortie.organisateur.site.nom }}</p>
-            {% endif %}
-            <p>Lieu : {{ sortie.lieu.nom }}</p>
-            <p>Rue : {{ sortie.lieu.rue }}</p>
-            <p>Code postal : {{ sortie.lieu.ville.codePostal }}</p>
+        <table class="table ">
+            <tr class="table-primary">
+                <th>Nom de la sortie :</th>
+                <td>{{ sortie.nom }}</td>
+            </tr>
+            <tr class="table-secondary">
+                <th>Date de la sortie :</th>
+                <td>{{ sortie.dateHeureDebut|date("d/m/Y à h:i") }}</td>
+            </tr>
+            <tr>
+                <th>Date limite d'inscription :</th>
+                <td>{{ sortie.dateLimiteInscription|date("d/m/Y") }}</td>
+            </tr>
+            <tr>
+                <th>Nombre de place :</th>
+                <td>{{ sortie.nbInscriptionsMax }}</td>
+            </tr>
+            <tr>
+                <th>Durée :</th>
+                <td>{{ sortie.duree }}</td>
+            </tr>
+            <tr>
+                <th>Ville organisatrice :</th>
+                <td>{{ sortie.organisateur.site.nom }}</td>
+            </tr>
+            <tr>
+                <th>Lieu :</th>
+                <td>{{ sortie.lieu.nom }}</td>
+            </tr>
+            <tr>
+                <th>Adresse :</th>
+                <td>{{ sortie.lieu.rue }}<br>
+                    {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}</td>
+            </tr>
             {% if sortie.lieu.latitude is not null %}
-                <p>Latitude : {{ sortie.lieu.latitude }}</p>
+                <tr>
+                    <th>Latitude :</th>
+                    <td>{{ sortie.lieu.latitude }}</td>
+                </tr>
             {% endif %}
             {% if sortie.lieu.longitude is not null %}
-                <p>Longitude : {{ sortie.lieu.longitude }}</p>
+                <tr>
+                    <th>Longitude :</th>
+                    <td>{{ sortie.lieu.longitude }}</td>
+                </tr>
             {% endif %}
-        </div>
+            <tr>
+                <th>Description et infos :</th>
+                <td>{{ sortie.infosSortie }}</td>
+            </tr>
+
+        </table>
     </div>
+
+
 
 
     <!-- affichage boutons -->
@@ -44,7 +84,7 @@
         {# si l'utilisateur courant n'est pas l'organisateur et n'est pas déjà inscrit, il peut s'inscrire #}
         {% if app.user is not same as(sortie.organisateur) and app.user not in sortie.participants %}
             {# si la date de cloture des inscription n'est pas dépassée #}
-            {% if date(sortie.dateLimiteInscription) > date() %}
+            {% if date(sortie.dateLimiteInscription) > date() and sortie.etat.id is same as(2) %}
                 <a href="{{ url('inscription',{'id':sortie.id}) }}">
                     <button type="button" class="btn btn-primary">S'inscrire</button>
                 </a>
@@ -66,31 +106,36 @@
         {# MODIFIER LA SORTIE #} {# ANNULER LA SORTIE #}
         {# Si l'utilisateur courant est l'ORGANISATEUR #}
         {% if app.user is same as(sortie.organisateur) %}
-            <a href="{{ url('modification',{'id':sortie.id}) }}">
-                <button type="button" class="btn btn-primary">Modifier la sortie</button>
-            </a>
-            <a href="{{ url('annulation',{'id':sortie.id}) }}">
-                <button type="button" class="btn btn-danger">Supprimer la sortie</button>
-            </a>
+
+            {# Si la sortie n'est pas En cours, Passée, Annulée ou Archivée #}
+            {% if sortie.etat.id == 1 or sortie.etat.id == 2 or sortie.etat.id == 3 %}
+                <a href="{{ url('modification',{'id':sortie.id}) }}">
+                    <button type="button" class="btn btn-primary">Modifier la sortie</button>
+                </a>
+                <a href="{{ url('annulation',{'id':sortie.id}) }}">
+                    <button type="button" class="btn btn-danger">Supprimer la sortie</button>
+                </a>
+            {% endif %}
         {% endif %}
 
     </div>
-
 
     <!-- affichage des participants -->
     <div class="row">
         <h3>Liste des participants inscrits</h3>
         <hr>
         <div class="col-12">
-            <table class="table">
+            <table class="table table-striped">
                 <thead>
                 <th>Pseudo</th>
                 <th>Nom</th>
+                <th>Site</th>
                 </thead>
                 {% for participant in sortie.participants %}
                     <tr>
-                        <td>{{ participant.username }}</td>
-                        <td>{{ participant.username }}</td>
+                        <td>{{ participant.username }} {% if participant is same as(sortie.organisateur)%}<span class="badge badge-primary">Organisateur</span> {% endif %}</td>
+                        <td>{{ participant.prenom }} {{ participant.nom|upper }}</td>
+                        <td>{{ participant.site.nom }}</td>
                     </tr>
                 {% endfor %}
             </table>

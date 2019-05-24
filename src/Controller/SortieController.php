@@ -12,8 +12,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class SortieController extends Controller
 {
@@ -25,6 +25,7 @@ class SortieController extends Controller
      */
     public function listeToutesSorties(Request $request)
     {
+
         //par defaut on récupère toutes les sorties
         $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
         $sorties = $sortieRepo->findAll();
@@ -84,6 +85,7 @@ class SortieController extends Controller
         $etatRepo = $this->getDoctrine()->getRepository(Etat::class);
         $sortie->setOrganisateur($this->getUser());
         $sortie->setParticipants(array());
+        $sortie->addParticipant($this->getUser());
 
         $villes = $em->getRepository(Ville::class)->findAll();
 
@@ -123,15 +125,20 @@ class SortieController extends Controller
         $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
         $sortie = $sortieRepo->find($id);
 
-        //si il reste des places, on ajoute l'utilisateur courant au tableau de participants à la sortie
-        if (sizeof($sortie->getParticipants()) < $sortie->getNbInscriptionsMax()) {
-            $sortie->addParticipant($this->getUser());
-            $em->flush();
-            $this->addFlash("success", "Vous êtes inscrit à la sortie " . $sortie->getNom() . " !");
-        } else {
-            $this->addFlash("danger", "Il n'y a plus de place pour la sortie " . $sortie->getNom());
-        }
+        //on vérifie que la date de cloture des inscriptions n'est pas dépassée et que le statut de la sortie soit "Ouverte"
+        if ($sortie->getDateLimiteInscription() > new \DateTime() && $sortie->getEtat()->getId() == 2 ) {
 
+            //si il reste des places, on ajoute l'utilisateur courant au tableau de participants à la sortie
+            if (sizeof($sortie->getParticipants()) < $sortie->getNbInscriptionsMax()) {
+                $sortie->addParticipant($this->getUser());
+                $em->flush();
+                $this->addFlash("success", "Vous êtes inscrit à la sortie " . $sortie->getNom() . " !");
+            } else {
+                $this->addFlash("danger", "Il n'y a plus de place pour la sortie " . $sortie->getNom());
+            }
+        } else {
+            $this->addFlash("danger", "Impossible de s'inscrire à cette sortie");
+        }
         return $this->redirectToRoute("liste_sorties");
     }
 
@@ -146,11 +153,18 @@ class SortieController extends Controller
         $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
         $sortie = $sortieRepo->find($id);
 
-        $sortie->removeParticipant($this->getUser());
-        $em->flush();
-        $this->addFlash("success", "Vous êtes désinscrit à la sortie " . $sortie->getNom());
+        //on vérifie que la sortie n'a pas commencé
+        if ($sortie->getDateHeureDebut() > new \DateTime()) {
+            $sortie->removeParticipant($this->getUser());
+            $em->flush();
+            $this->addFlash("success", "Vous êtes désinscrit à la sortie " . $sortie->getNom());
 
-        return $this->redirectToRoute("liste_sorties");
+            return $this->redirectToRoute("liste_sorties");
+        } else {
+            $this->addFlash("danger", "Vous ne pas vous désister sur une sortie qui a commencée");
+        }
+
+
     }
 
     /**
@@ -202,7 +216,7 @@ class SortieController extends Controller
      * @param EntityManagerInterface $em
      */
     public
-    function annulation($id, EntityManagerInterface $em)
+    function annulation($id, EntityManagerInterface $em, Request $request)
     {
         //récupération de la sortie concernée en fonction de l'id en paramètre
         $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
@@ -211,7 +225,30 @@ class SortieController extends Controller
         //on vérifie que l'utilisateur courant est bien l'organisateur de la sortie
         $user = $this->getUser();
         if ($user == $sortie->getOrganisateur()) {
-            $formAnnulation = $this->createForm(AnnulationType::class);
+
+            //on vérifie que la sortie n'a pas encore commencé
+            if ($sortie->getDateHeureDebut() > new \DateTime()) {
+
+                $formAnnulation = $this->createForm(AnnulationType::class);
+                $formAnnulation->handleRequest($request);
+
+                if ($formAnnulation->isSubmitted()) {
+                    //on récupère le motif d'annulation
+                    $motifAnnulation = $formAnnulation->getData();
+
+                    //on set l'état "annulée" (etat.id =6) à la sortie
+                    $etatRepo = $this->getDoctrine()->getRepository(Etat::class);
+                    $sortie->setEtat($etatRepo->find(6));
+                    $sortie->setMotifAnnulation($motifAnnulation['motif']);
+                    $em->persist($sortie);
+                    $em->flush();
+
+                    $this->addFlash("success", "La sortie a bien été annulée");
+                    $this->redirectToRoute("sortie_details", ['id' => $sortie->getId()]);
+                }
+            } else {
+                $this->add("danger", "Impossible d'annuler la sortie en cours");
+            }
 
             return $this->render("sortie/annulation.html.twig", [
                 'formAnnulation' => $formAnnulation->createView(),

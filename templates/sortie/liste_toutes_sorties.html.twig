@@ -2,20 +2,22 @@
 
 {% block main %}
     <div class="row">
+        <a class="col-12" href="{{ path('creer_sortie') }}">
+            <button type="button" class="btn btn-primary btn-lg btn-block">Créer une sortie !</button>
+        </a>
+    </div>
+    <hr>
+    <div class="row">
 
         <div class="col-12 col-md-6">
             {{ form_start(rechercheForm) }}
-            <label for="recherche_sortie[site]">Site : </label>
             {{ form_row(rechercheForm.site) }}
-            <label for="recherche_sortie[nomContient]">Le nom de la sortie contient : </label>
             {{ form_row(rechercheForm.nomContient) }}
             <div class="row">
                 <div class="col-12 col-md-6">
-                    <label for="recherche_sortie[periodeDebut]">Du :</label>
                     {{ form_row(rechercheForm.periodeDebut) }}
                 </div>
                 <div class="col-12 col-md-6">
-                    <label for="recherche_sortie[periodeFin]">Au : </label>
                     {{ form_row(rechercheForm.periodeFin) }}
                 </div>
             </div>
@@ -26,6 +28,7 @@
             {{ form_row(rechercheForm.nonInscrit) }}
             {{ form_row(rechercheForm.sortiePassee) }}
             {{ form_widget(rechercheForm.rechercher, { 'label': 'Rechercher' }) }}
+            {{ form_widget(rechercheForm.reinitialiser) }}
             {{ form_end(rechercheForm) }}
         </div>
 
@@ -43,48 +46,56 @@
         <tr>
             <th scope="col">Nom de la sortie</th>
             <th scope="col">Date de la sortie</th>
-            <th scope="col">Clôture</th>
-            <th scope="col">Inscrit/places</th>
-            <th scope="col">Etat</th>
-            <th scope="col">Inscrit</th>
-            <th scope="col">Organisateur</th>
+            <th scope="col" class="d-none d-sm-table-cell d-md-none">Lieu</th>
+            <th scope="col" class="d-none d-md-table-cell">Clôture</th>
+            <th scope="col" class="d-none d-md-table-cell">Inscrit/places</th>
+            <th scope="col" class="d-none d-md-table-cell">Etat</th>
+            <th scope="col" class="d-none d-md-table-cell">Inscrit</th>
+            <th scope="col" class="d-none d-md-table-cell">Organisateur</th>
             <th scope="col"></th>
         </tr>
         </thead>
 
         {% for sortie in sorties %}
-            <tr>
-                <td>{{ sortie.nom }}</td>
-                <td>{{ sortie.dateHeureDebut|date("d/m/Y h:i") }}</td>
-                <td>{{ sortie.dateLimiteInscription|date("d/m/Y") }}</td>
-                <td>{{ sortie.participants|length }} / {{ sortie.nbInscriptionsMax }}</td>
-                <td>{{ sortie.etat.libelle }}</td>
-                <td class="inscrit">
-                    {% if app.user in sortie.participants %}
-                        <i class="fas fa-check-circle"></i>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if app.user is same as(sortie.organisateur) %}
-                        <span class="badge badge-secondary">Vous !</span>
-                    {% else %}
-                        {{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom|first|upper }}.
-                    {% endif %}
-                </td>
-                <td>
-                    <a href="{{ url('sortie_details',{'id':sortie.id}) }}">Afficher</a>
-                    {% if app.user is not same as(sortie.organisateur) and app.user not in sortie.participants %}
-                        <a href="{{ url('inscription',{'id':sortie.id}) }}">S'inscrire</a>
-                    {% endif %}
-                    {% if app.user is not same as(sortie.organisateur) and app.user in sortie.participants %}
-                        <a href="{{ url('desistement',{'id':sortie.id}) }}">Se désister </a>
-                    {% endif %}
-                    {% if app.user is same as(sortie.organisateur) %}
-                        <a href="{{ url('annulation',{'id':sortie.id}) }}">Annuler</a>
-                    {% endif %}
+{#            {% if sortie.etat.id!=1 %}#}
+                    <tr>
+                        <td><a href="{{ url('sortie_details',{'id':sortie.id}) }}">{{ sortie.nom }}</a></td>
+                        <td>{{ sortie.dateHeureDebut|date("d/m/Y h:i") }}</td>
+                        <td class="d-none d-sm-table-cell d-md-none">{{ sortie.lieu.ville.nom }}</td>
+                        <td class="d-none d-md-table-cell">{{ sortie.dateLimiteInscription|date("d/m/Y") }}</td>
+                        <td class="d-none d-md-table-cell">{{ sortie.participants|length }} / {{ sortie.nbInscriptionsMax }}</td>
+                        <td class="d-none d-md-table-cell">{{ sortie.etat.libelle }}</td>
+                        <td class="inscrit d-none d-md-table-cell">
+                            {% if app.user in sortie.participants %}
+                                <i class="fas fa-check-circle"></i>
+                            {% endif %}
+                        </td>
+                        <td class="d-none d-md-table-cell">
+                            {% if app.user is same as(sortie.organisateur) %}
+                                <span class="badge badge-secondary">Vous !</span>
+                            {% else %}
+                                {{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom|first|upper }}.
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{{ url('sortie_details',{'id':sortie.id}) }}">Afficher</a>
+                            {% if app.user is not same as(sortie.organisateur) and app.user not in sortie.participants %}
 
-                </td>
-            </tr>
+                                {% if date(sortie.dateLimiteInscription) > date() and sortie.etat.id is same as(2) %}
+                                    <a href="{{ url('inscription',{'id':sortie.id}) }}">S'inscrire</a>
+                                {% endif %}
+
+                            {% endif %}
+                            {% if app.user is not same as(sortie.organisateur) and app.user in sortie.participants %}
+                                <a href="{{ url('desistement',{'id':sortie.id}) }}">Se désister </a>
+                            {% endif %}
+                            {% if app.user is same as(sortie.organisateur) and (sortie.etat.id == 1 or sortie.etat.id == 2 or sortie.etat.id == 3) %}
+                                <a href="{{ url('annulation',{'id':sortie.id}) }}">Annuler</a>
+                            {% endif %}
+
+                        </td>
+                    </tr>
+{#            {% endif %}#}
         {% endfor %}
     </table>
 {% endblock %}

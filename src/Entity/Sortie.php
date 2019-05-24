@@ -69,6 +69,29 @@ class Sortie
      */
     private $participants;
 
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $motifAnnulation;
+
+    /**
+     * @return mixed
+     */
+    public function getMotifAnnulation()
+    {
+        return $this->motifAnnulation;
+    }
+
+    /**
+     * @param mixed $motifAnnulation
+     * @return Sortie
+     */
+    public function setMotifAnnulation($motifAnnulation)
+    {
+        $this->motifAnnulation = $motifAnnulation;
+        return $this;
+    }
+
 
     /**
      * @return mixed

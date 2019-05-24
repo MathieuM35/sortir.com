@@ -1,16 +1,51 @@
-<nav class="nav-link active">
-        <a href="{{ path('liste_sorties') }}">Accueil</a>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <a class="navbar-brand" href="{{ path('liste_sorties') }}">Logo</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 
-        {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('user-register') }}">Créer un profil</a>
-            <a href="{{ path('site') }}">Liste des sites</a>
-            <a href="{{ path('site') }}">Liste des villes</a><!-- revoir le chemin -->
-        {% endif %}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('liste_sorties') }}">Accueil</a>
+            </li>
 
-        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-            <a href="{{ path('logout') }}">Déconnexion</a>
-            <a href="{{ path('user-update') }}">Mon profil</a>
-        {% else %}
-            <a href="{{ path('login') }}">Se connecter</a>
-        {% endif %}
+
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <li class="nav-item"><a class="nav-link" href="{{ path('creer_sortie') }}">Créer une sortie</a></li>
+            {% endif %}
+
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Admin</i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ path('user-register') }}">Créer un profil</a>
+                        <a class="dropdown-item" href="{{ path('site') }}">Gérer les sites</a>
+                        <a class="dropdown-item" href="{{ path('site') }}">Gérer les villes</a><!-- revoir le chemin -->
+                    </div>
+                </li>
+            {% endif %}
+
+
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ app.user.username|upper }}  <i class="fas fa-user-circle"></i>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ path('user-update') }}">Mon profil</a>
+                        <a class="dropdown-item" href="{{ path('logout') }}">Déconnexion</a>
+                    </div>
+                </li>
+            {% else %}
+                <li class="nav-item"><a class="nav-link" href="{{ path('login') }}">Se connecter</a></li>
+            {% endif %}
+        </ul>
+    </div>
 </nav>

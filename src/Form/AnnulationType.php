@@ -15,14 +15,13 @@ class AnnulationType extends AbstractType
     {
         $builder
             ->add('motif',TextareaType::class,[
+                'label'=>'Motif de l\'annulation : ',
                 'attr'=>['placeholder'=>'Entrez ici le motif de l\'annulation de la sortie']
             ])
             ->add('annuler',SubmitType::class,[
                 'label'=>'Annuler la sortie',
                 'attr' => [
                     'class' => 'btn btn-danger',
-                    'data-toggle'=>'modal',
-                    'data-target'=>'#confirmAnnulation',
                 ]
             ])
 
