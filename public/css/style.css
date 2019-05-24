@@ -1,6 +1,45 @@
-.mainContent{
-    margin-top: 20px;
+.loginPage{
+    height: 100%;
+    color:#fff;
+    /*background-image: url("https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80");*/
+    /*background-image: url("https://images.unsplash.com/photo-1506869640319-fe1a24fd76dc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80");*/
+    /*background-image: url("https://images.unsplash.com/photo-1438557068880-c5f474830377?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1953&q=80");*/
+    background-image: url("https://images.unsplash.com/photo-1471421298428-1513ab720a8e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1864&q=80");
+    background-position: center;
+
+    background-size: cover;
+    background-repeat: no-repeat;
+    /*text-align: center;*/
+    margin: auto;
 }
+
+.searchForm{
+    background-image: url("../img/p5.png");
+}
+
+.loginPage hr{
+    border: 2px solid #fff;
+}
+.loginPage h1{
+    font-size: 4em;
+    font-family: 'Kalam', cursive;
+}
+
+.searchForm{
+    padding: 20px;
+}
+
+.contentLogin{
+    margin-top: 10%;
+    background-color: #1d2124;
+    padding: 40px;
+}
+.formLogin{
+    height: 100%;
+    vertical-align: center;
+}
+
+
 
 .navbar .nav-item {
     position: relative;
@@ -22,4 +61,9 @@
 .navbar .nav-item:hover::before {
     transform-origin: bottom left;
     transform: scaleX(1);
+}
+
+.inscrit{
+    color:limegreen;
+    text-align: center;
 }

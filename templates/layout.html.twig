@@ -25,28 +25,22 @@
           integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <title>{% block title %}Sortir !{% endblock %}</title>
 </head>
-<body>
-<div class="container-fluid">
-    <header>{% include('inc/nav.html.twig') %}</header>
-</div>
-<div class="container">
-    {% for label,messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ label }}">
-                {{ message }}
-            </div>
-        {% endfor %}
+<body class="container-fluid">
+<header>{% include('inc/nav.html.twig') %}</header>
+{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+{% endif %}
+
+{% for label,messages in app.flashes %}
+    {% for message in messages %}
+        <div class="alert alert-{{ label }}">
+            {{ message }}
+        </div>
     {% endfor %}
+{% endfor %}
+{% block main %}{% endblock %}
 
-    <div class="mainContent">
-        {% block main %}{% endblock %}
-    </div>
-</div>
-
-<div class="container-fluid">
-    <footer class="fixed-bottom">
-        <p>designed by Equipe Ketchup© {{ "now" | date("Y") }}</p>
-    </footer>
-</div>
+<footer class="fixed-bottom">
+    <p>designed by Equipe Ketchup© {{ "now" | date("Y") }}</p>
+</footer>
 </body>
 </html>

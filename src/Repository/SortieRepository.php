@@ -30,92 +30,173 @@ class SortieRepository extends ServiceEntityRepository
      */
     public function findSortiesSelonRecherche($criteres, $user)
     {
+
+        $champsRestrictif = false;
+        if ($criteres['site'] or $criteres['nomContient'] or $criteres['periodeDebut'] or $criteres['periodeFin']) {
+            $champsRestrictif = true;
+        }
+
         $auMoinsUneCheckboxeCochee = false;
         if ($criteres['organisateur'] or $criteres['inscrit']
             or $criteres['nonInscrit'] or $criteres['sortiePassee']) {
             $auMoinsUneCheckboxeCochee = true;
         }
-    dump($auMoinsUneCheckboxeCochee);
-        $qb = $this->createQueryBuilder('s');
 
-        $qb->leftJoin('s.organisateur', 'u');
-        $qb->addSelect('u');
+        $em = $this->getEntityManager();
 
-        $qb->leftJoin('u.site', 'si');
-        $qb->addSelect('si');
+        $dql = <<<DQL
+SELECT s, u
+FROM App\Entity\Sortie s
+JOIN s.participants u
+JOIN u.site si
+WHERE
+DQL;
 
-        //on construit la requete selon les champs qui ont été complétés
+        if ($champsRestrictif) {
+            if ($criteres['site']) {
+                $dql .= " si.id = :idSite AND ";
+            }
+            if ($criteres['nomContient']) {
+                $dql .= " s.nom LIKE :nomContient AND";
+            }
+            if ($criteres['periodeDebut'] && $criteres['periodeFin']) {
+                $dql .= " s.dateHeureDebut BETWEEN :periodeDebut AND :periodeFin AND";
+            }
+            if ($criteres['periodeDebut'] && empty($criteres['periodeFin'])) {
+                $dql .= " s.dateHeureDebut > :periodeDebut AND";
+            }
+            if ($criteres['periodeFin'] && empty($criteres['periodeDebut'])) {
+                $dql .= " s.dateHeureDebut < :periodeFin AND";
+            }
+        }
+
+        $dql .= " s.id IS NOT NULL";
+
+        //GESTION CHECKBOXES
+
+        if ($auMoinsUneCheckboxeCochee) {
+            $dql .= " AND(";
+        }
+
+        if ($criteres['organisateur']) {
+            $dql .= " s.organisateur = :organisateur";
+            if($criteres['inscrit'] or $criteres['nonInscrit'] or $criteres['sortiePassee']== true){
+                $dql .= " OR ";
+            } else {
+                $dql .= " )";
+            }
+        }
+
+        if ($criteres['inscrit']) {
+            $dql .= " u.id = :idUser ";
+            if($criteres['nonInscrit'] or $criteres['sortiePassee']){
+                $dql .= " OR ";
+            } else {
+                $dql .= " )";
+            }
+        }
+
+        if($criteres['nonInscrit']){
+            $dql .= " s.id NOT IN (SELECT so
+                    FROM App\Entity\Sortie so
+                    JOIN so.participants us
+                    JOIN us.site sit
+                    WHERE us.id = :idUser)";
+            if($criteres['sortiePassee']){
+                $dql .= " OR ";
+            } else {
+                $dql .= " )";
+            }
+        }
+
+        if ($criteres['sortiePassee']) {
+            $dql .= " s.dateHeureDebut < :aujourdhui)";
+        }
+
+        $dql .= " ORDER BY s.dateHeureDebut ASC";
+
+        //on créer la query
+        $query = $em->createQuery($dql);
+
+
+        //on set les paramètres à la query
         if ($criteres['site']) {
-
-//            $qb->join('s.organisateur','u');
-//            $qb->addSelect('u');
-//            $qb->join('u.site','si');
-//            $qb->addSelect('si');
-
-            $qb->andWhere('si.id = :idSite');
-            $qb->setParameter('idSite', $criteres['site']);
+            $query->setParameter('idSite', $criteres['site']->getId());
         }
         if ($criteres['nomContient']) {
-            $qb->andWhere('s.nom LIKE :nomContient');
-            $qb->setParameter('nomContient', '%' . $criteres['nomContient'] . '%');
+            $query->setParameter('nomContient', '%' . $criteres['nomContient'] . '%');
         }
         if ($criteres['periodeDebut'] && $criteres['periodeFin']) {
-            $qb->andWhere('s.dateHeureDebut BETWEEN :periodeDebut AND :periodeFin');
-            $qb->setParameter('periodeDebut', $criteres['periodeDebut']);
-            $qb->setParameter('periodeFin', $criteres['periodeFin']);
+            $query->setParameter('periodeDebut', $criteres['periodeDebut']);
+            $query->setParameter('periodeFin', date_add($criteres['periodeFin'], date_interval_create_from_date_string('1 day')));
         }
         if ($criteres['periodeDebut'] && empty($criteres['periodeFin'])) {
-            $qb->andWhere('s.dateHeureDebut > :periodeDebut');
-            $qb->setParameter('periodeDebut', $criteres['periodeDebut']);
+            $query->setParameter('periodeDebut', $criteres['periodeDebut']);
         }
         if ($criteres['periodeFin'] && empty($criteres['periodeDebut'])) {
-            $qb->andWhere('s.dateHeureDebut < :periodeFin');
-            $qb->setParameter('periodeFin', $criteres['periodeFin']);
+            $query->setParameter('periodeFin', date_add($criteres['periodeFin'], date_interval_create_from_date_string('1 day')));
         }
 
-        //Gestion des checkboxes
+        //on set les parametres liés aux checkboxes
         if ($criteres['organisateur']) {
-            if ($auMoinsUneCheckboxeCochee) {
-                $qb->orWhere('s.organisateur = :organisateur');
-            } else {
-                $qb->andWhere('s.organisateur = :organisateur');
-            }
-            $qb->setParameter('organisateur', $user);
+            $query->setParameter('organisateur', $user);
         }
         if ($criteres['inscrit']) {
-            $qb->join('s.participants', 'us');
-            $qb->addSelect('us');
-            if ($auMoinsUneCheckboxeCochee) {
-                $qb->orWhere('us.id = :idUser');
-            } else {
-                $qb->andWhere('us.id = :idUser');
-            }
-
-            $qb->setParameter('idUser', $user);
+            $query->setParameter('idUser', $user);
         }
         if ($criteres['nonInscrit']) {
-//TODO
-//            $qb->join('s.participants','u');
-//            $qb->addSelect('u');
-//            $qb->andWhere('NOT u.id = :idUser');
-//            $qb->setParameter('idUser',$user);
+            $query->setParameter('idUser', $user);
         }
+
         if ($criteres['sortiePassee']) {
-            if ($auMoinsUneCheckboxeCochee) {
-                $qb->orWhere('s.dateHeureDebut < :aujourdhui');
-            } else {
-                $qb->andWhere('s.dateHeureDebut < :aujourdhui');
-            }
-            $qb->setParameter('aujourdhui', new \DateTime());
+            $query->setParameter('aujourdhui', new \DateTime());
         }
 
-        //on affiche les sorties selon leur date
-        $qb->orderBy('s.dateHeureDebut', 'ASC');
-
-        //on effectue la requete
-        $query = $qb->getQuery();
         $sorties = $query->getResult();
         return $sorties;
+
+        //Gestion des checkboxes 23/04
+//        if ($criteres['organisateur']) {
+//            if ($champsRestrictif) {
+//                $qb->andWhere('s.organisateur = :organisateur');
+//            } else {
+//                $qb->orWhere('s.organisateur = :organisateur');
+//            }
+//            $qb->setParameter('organisateur', $user);
+//        }
+//        if ($criteres['inscrit']) {
+//            $qb->join('s.participants', 'us');
+//            $qb->addSelect('us');
+//            if ($champsRestrictif) {
+//                $qb->andWhere('us.id = :idUser');
+//            } else {
+//                $qb->orWhere('us.id = :idUser');
+//            }
+//            $qb->setParameter('idUser', $user);
+//        }
+//        if ($criteres['nonInscrit']) {
+////TODO
+////            $qb->join('s.participants','u');
+////            $qb->addSelect('u');
+////            $qb->andWhere('NOT u.id = :idUser');
+////            $qb->setParameter('idUser',$user);
+//        }
+//        if ($criteres['sortiePassee']) {
+//            if ($champsRestrictif) {
+//                $qb->andWhere('s.dateHeureDebut < :aujourdhui');
+//            } else {
+//                $qb->orWhere('s.dateHeureDebut < :aujourdhui');
+//            }
+//            $qb->setParameter('aujourdhui', new \DateTime());
+//        }
+
+//        //on affiche les sorties selon leur date
+//        $qb->orderBy('s.dateHeureDebut', 'ASC');
+//
+//        //on effectue la requete
+//        $query = $qb->getQuery();
+//        $sorties = $query->getResult();
+//        return $sorties;
     }
 
     public function findParticipantsParSortie($idSortie = 13)
