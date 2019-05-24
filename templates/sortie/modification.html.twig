@@ -21,7 +21,7 @@
         </div>
     </div>
     <div class="row">
-        {% if sortie.etat.id == 1 %}
+        {% if sortie.etat.id == 1 %} {# sortie.etat == 1 siginifie état "En création" (non publiée) #}
             <div class="col-3"> {{ form_widget(formSortie.enregister, { 'label': 'Enregister' }) }}</div>
         {% else %}
             <div class="col-3" style="display: none"> {{ form_widget(formSortie.enregister) }}</div>

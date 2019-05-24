@@ -64,7 +64,7 @@ class RechercheSortieType extends AbstractType
             ])
             ->add('reinitialiser', ResetType::class,[
                 'label'=>'Réinitialiser les champs',
-                'attr'=>['class'=>'btn btn-outline-secondary btn-sm btn-block']
+                'attr'=>['class'=>'btn btn-secondary btn-sm btn-block']
             ]);
     }
 

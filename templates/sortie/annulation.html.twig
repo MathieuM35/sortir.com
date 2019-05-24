@@ -6,37 +6,49 @@
         <h2>Annuler votre sortie</h2>
     </div>
     <div class="row">
-        <div class="col-12 col-md-6">
-            <ul>
-                <li>Nom de la sortie : {{ sortie.nom }}</li>
-                <li>Date de la sortie : {{ sortie.dateHeureDebut|date("d/m/Y") }}</li>
-                <li>Ville organisatrice : {{ sortie.organisateur.site.nom }}</li>
-                <li>Lieu : {{ sortie.lieu.nom }}<br>
+        <table class="table table-striped">
+            <tr>
+                <th>Nom de la sortie :</th>
+                <td>{{ sortie.nom }}</td>
+            </tr>
+            <tr>
+                <th>Date de la sortie :</th>
+                <td>{{ sortie.dateHeureDebut|date("d/m/Y à h:i") }}</td>
+            </tr>
+            <tr>
+                <th>Ville organisatrice :</th>
+                <td>{{ sortie.organisateur.site.nom }}</td>
+            </tr>
+            <tr>
+                <th>Lieu :</th>
+                <td>{{ sortie.lieu.nom }}<br>
                     {{ sortie.lieu.rue }}<br>
-                    {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}
-                </li>
-            </ul>
-        </div>
+                    {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}</td>
+            </tr>
+        </table>
 
-
-        <div class="col-12 col-md-6">
+        <div class="col-12">
             {{ form_start(formAnnulation) }}
-            <label for="annulation[motif]">Motif de l'annulation :</label>
             {{ form_row(formAnnulation.motif) }}
-
         </div>
     </div>
     <div class="row">
     <div class="col-12">
-        {{ form_widget(formAnnulation.annuler) }}
-        {{ form_end(formAnnulation) }}
+
+
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmAnnulation">
+            Annuler la sortie
+        </button>
+
         <a href="{{ url('sortie_details',{'id':idSortie}) }}">
             <button type="button" class="btn btn-secondary">Retour à la sortie</button>
         </a>
     </div>
 
-<!-- MODAL CONFIRMATION ANNULATION -->
-    <div class="modal fade" id="confirmAnnulation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <!-- MODAL CONFIRMATION ANNULATION -->
+    <div class="modal fade" id="confirmAnnulation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -46,11 +58,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                   Etes-vous sûr de vouloir supprimer la sortie {{ sortie.nom }} ?
+                    Etes-vous sûr de vouloir supprimer la sortie {{ sortie.nom }} ?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
-                    <button type="button" class="btn btn-danger">Annuler la sortie</button>
+                    {{ form_widget(formAnnulation.annuler) }}
+                    {{ form_end(formAnnulation) }}
                 </div>
             </div>
         </div>

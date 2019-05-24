@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Site;
 use App\Entity\Sortie;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -28,13 +30,30 @@ class SortieRepository extends ServiceEntityRepository
      */
     public function findSortiesSelonRecherche($criteres, $user)
     {
+        $auMoinsUneCheckboxeCochee = false;
+        if ($criteres['organisateur'] or $criteres['inscrit']
+            or $criteres['nonInscrit'] or $criteres['sortiePassee']) {
+            $auMoinsUneCheckboxeCochee = true;
+        }
+    dump($auMoinsUneCheckboxeCochee);
         $qb = $this->createQueryBuilder('s');
+
+        $qb->leftJoin('s.organisateur', 'u');
+        $qb->addSelect('u');
+
+        $qb->leftJoin('u.site', 'si');
+        $qb->addSelect('si');
 
         //on construit la requete selon les champs qui ont été complétés
         if ($criteres['site']) {
-            //TODO
-            //$qb->andWhere('s.site = :site');
-            //$qb->setParameter('site', $criteres['site']);
+
+//            $qb->join('s.organisateur','u');
+//            $qb->addSelect('u');
+//            $qb->join('u.site','si');
+//            $qb->addSelect('si');
+
+            $qb->andWhere('si.id = :idSite');
+            $qb->setParameter('idSite', $criteres['site']);
         }
         if ($criteres['nomContient']) {
             $qb->andWhere('s.nom LIKE :nomContient');
@@ -53,18 +72,40 @@ class SortieRepository extends ServiceEntityRepository
             $qb->andWhere('s.dateHeureDebut < :periodeFin');
             $qb->setParameter('periodeFin', $criteres['periodeFin']);
         }
+
+        //Gestion des checkboxes
         if ($criteres['organisateur']) {
-            $qb->andWhere('s.organisateur = :organisateur');
+            if ($auMoinsUneCheckboxeCochee) {
+                $qb->orWhere('s.organisateur = :organisateur');
+            } else {
+                $qb->andWhere('s.organisateur = :organisateur');
+            }
             $qb->setParameter('organisateur', $user);
         }
         if ($criteres['inscrit']) {
-            //TODO leftjoin
+            $qb->join('s.participants', 'us');
+            $qb->addSelect('us');
+            if ($auMoinsUneCheckboxeCochee) {
+                $qb->orWhere('us.id = :idUser');
+            } else {
+                $qb->andWhere('us.id = :idUser');
+            }
+
+            $qb->setParameter('idUser', $user);
         }
         if ($criteres['nonInscrit']) {
-            //TODO
+//TODO
+//            $qb->join('s.participants','u');
+//            $qb->addSelect('u');
+//            $qb->andWhere('NOT u.id = :idUser');
+//            $qb->setParameter('idUser',$user);
         }
         if ($criteres['sortiePassee']) {
-            $qb->andWhere('s.dateHeureDebut < :aujourdhui');
+            if ($auMoinsUneCheckboxeCochee) {
+                $qb->orWhere('s.dateHeureDebut < :aujourdhui');
+            } else {
+                $qb->andWhere('s.dateHeureDebut < :aujourdhui');
+            }
             $qb->setParameter('aujourdhui', new \DateTime());
         }
 
@@ -77,7 +118,7 @@ class SortieRepository extends ServiceEntityRepository
         return $sorties;
     }
 
-    public function findParticipantsParSortie($idSortie=13)
+    public function findParticipantsParSortie($idSortie = 13)
     {
         $em = $this->getEntityManager();
         $dql = "SELECT participants

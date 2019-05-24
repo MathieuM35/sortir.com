@@ -1,0 +1,25 @@
+.mainContent{
+    margin-top: 20px;
+}
+
+.navbar .nav-item {
+    position: relative;
+}
+
+.navbar .nav-item::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #3cefff;
+    transform-origin: bottom right;
+    transform: scaleX(0);
+    transition: transform 0.5s ease;
+}
+
+.navbar .nav-item:hover::before {
+    transform-origin: bottom left;
+    transform: scaleX(1);
+}
