@@ -68,7 +68,7 @@
                     {% if app.user is same as(sortie.organisateur) %}
                         <span class="badge badge-secondary">Vous !</span>
                     {% else %}
-                        {{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom|first|upper }}.
+                        <a href="{{ url('detail-profil',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom|first|upper }}.</a>
                     {% endif %}
                 </td>
                 <td>

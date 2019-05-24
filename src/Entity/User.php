@@ -44,10 +44,10 @@ class User implements UserInterface
 
     /**
      * @Assert\NotBlank(message="Veuillez renseigner votre téléphone svp !")
-     * @Assert\Regex(pattern="/^\+31\(0\)[0-9]*$/", message="Le numéro de téléphone n'est pas valide")
      * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $telephone;
+/* * @Assert\Regex(pattern="/^\+33\(0\)[0-9]*$/", message="Le numéro de téléphone n'est pas valide")*/
 
     /**
      * @Assert\NotBlank(message="Veuillez renseigner votre adresse email svp !")

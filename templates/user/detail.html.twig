@@ -1,0 +1,14 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Détail profil{% endblock %}
+{% block main %}
+
+    <h1>{{ user.username }}</h1>
+    <div>
+        <p>Prénom : {{ user.prenom }}</p>
+        <p>Nom : {{ user.nom }}</p>
+        <p>Téléphone : {{ user.telephone }}</p>
+        <p>Email : {{ user.email }}</p>
+        <p>Ville de rattachement : {{ user.site.nom }}</p>
+    </div>
+    <a href="{{ path('liste_sorties') }}"><button type="button" >Retour</button></a>
+{% endblock %}
