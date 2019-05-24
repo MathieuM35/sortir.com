@@ -93,6 +93,20 @@ class SortieController extends Controller
         $formSortie->handleRequest($request);
 
         if ($formSortie->isSubmitted() && $formSortie->isValid()) {
+            $erreurs = "";
+            //on vérifie les dates
+            if ($sortie->getDateHeureDebut() < new \DateTime()) {
+                $erreurs .= " La date de debut de la sortie ne peut pas être passée. ";
+            }
+            if ($sortie->getDateLimiteInscription() < new  \DateTime()) {
+                $erreurs .= " La date de debut de la sortie ne peut pas être passée. ";
+            }
+            if ($sortie->getDateLimiteInscription() > $sortie->getDateHeureDebut()) {
+                $erreurs .= " La date limite d'inscription doit être avant le début de la sortie. ";
+            }
+            if ($sortie->getNbInscriptionsMax() < 2) {
+                $erreurs .= " Nombre minimum de participants : 2 ";
+            }
             //on set un état différent en fonction du bouton submit cliqué (Enregistrer ou Publier)
             //si clic sur le bouton Enregister on set l'état 'En création'
             if ($formSortie->get('enregister')->isClicked()) {
@@ -102,12 +116,19 @@ class SortieController extends Controller
             if ($formSortie->get('publier')->isClicked()) {
                 $sortie->setEtat($etatRepo->find(2));
             }
-            //insertion en BDD
-            $em->persist($sortie);
-            $em->flush();
 
-            $this->addFlash("success", "Votre sortie a bien été ajoutée !");
-            return $this->redirectToRoute("liste_sorties");
+            //on vérifie qu'il n'y a pas eu d'erreurs
+            if($erreurs == ""){
+                //insertion en BDD
+                $em->persist($sortie);
+                $em->flush();
+                $this->addFlash("success", "Votre sortie a bien été ajoutée !");
+                return $this->redirectToRoute("liste_sorties");
+            } else {
+                $this->addFlash("danger", $erreurs);
+                return (['formSortie' => $formSortie->createView()]);
+            }
+
         } else {
             return (['formSortie' => $formSortie->createView()]);
         }
@@ -126,7 +147,7 @@ class SortieController extends Controller
         $sortie = $sortieRepo->find($id);
 
         //on vérifie que la date de cloture des inscriptions n'est pas dépassée et que le statut de la sortie soit "Ouverte"
-        if ($sortie->getDateLimiteInscription() > new \DateTime() && $sortie->getEtat()->getId() == 2 ) {
+        if ($sortie->getDateLimiteInscription() > new \DateTime() && $sortie->getEtat()->getId() == 2) {
 
             //si il reste des places, on ajoute l'utilisateur courant au tableau de participants à la sortie
             if (sizeof($sortie->getParticipants()) < $sortie->getNbInscriptionsMax()) {
@@ -222,9 +243,9 @@ class SortieController extends Controller
         $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
         $sortie = $sortieRepo->find($id);
 
-        //on vérifie que l'utilisateur courant est bien l'organisateur de la sortie
+        //on vérifie que l'utilisateur courant est bien l'organisateur de la sortie ou un utilisateur ADMIN
         $user = $this->getUser();
-        if ($user == $sortie->getOrganisateur()) {
+        if ($user == $sortie->getOrganisateur() or $user->getAdministrateur()) {
 
             //on vérifie que la sortie n'a pas encore commencé
             if ($sortie->getDateHeureDebut() > new \DateTime()) {
@@ -234,12 +255,17 @@ class SortieController extends Controller
 
                 if ($formAnnulation->isSubmitted()) {
                     //on récupère le motif d'annulation
-                    $motifAnnulation = $formAnnulation->getData();
+                    $formAnnulationData = $formAnnulation->getData();
+                    if ($user == $sortie->getOrganisateur()) {
+                        $motifAnnulation = "Cette sortie a été annulée par son organisateur. Motif : " . $formAnnulationData['motif'];
+                    } else {
+                        $motifAnnulation = "Cette sortie a été annulée par un ADMINISTRATEUR. Motif : " . $formAnnulationData['motif'];
+                    }
 
                     //on set l'état "annulée" (etat.id =6) à la sortie
                     $etatRepo = $this->getDoctrine()->getRepository(Etat::class);
                     $sortie->setEtat($etatRepo->find(6));
-                    $sortie->setMotifAnnulation($motifAnnulation['motif']);
+                    $sortie->setMotifAnnulation($motifAnnulation);
                     $em->persist($sortie);
                     $em->flush();
 
@@ -257,5 +283,6 @@ class SortieController extends Controller
             ]);
         }
     }
+
 
 }
