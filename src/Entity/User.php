@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @UniqueEntity(fields={"username"})
  * @ORM\Table(name="app_user")
  */
-class User implements UserInterface
+class User implements UserInterface//, \Serializable
 {
     /**
      * @ORM\Id()
@@ -77,7 +77,7 @@ class User implements UserInterface
     private $sortiesOrganise;
 
     /**
-     * @Assert\Length(min="2", max="50", minMessage="Le mot de passe doit contenir au moins {{ limit }} caractères !", maxMessage="Le mot de passe ne doit pas dépasser {{ limit }} caractères !")
+     * @Assert\Length(min="2", max="255", minMessage="Le mot de passe doit contenir au moins {{ limit }} caractères !", maxMessage="Le mot de passe ne doit pas dépasser {{ limit }} caractères !")
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $password;
@@ -86,6 +86,31 @@ class User implements UserInterface
      *
      */
     private $roles;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     *
+     * @Assert\File(mimeTypes={ "image/png","image/jpeg","image/jpg","image/gif" })
+     */
+    private $photo;
+
+    /**
+     * @return mixed
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    /**
+     * @param mixed $photo
+     */
+    public function setPhoto($photo)
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
 
     public function getRoles()
     {
@@ -262,4 +287,27 @@ class User implements UserInterface
 
         return $this;
     }
+
+//    /**
+//     * @see \Serializable::serialize()
+//     */
+//    public function serialize()
+//    {
+//        return serialize(array(
+//            $this->id,
+//            $this->photo,
+//        ));
+//    }
+//
+//    /**
+//     * @see \Serializable::unserialize()
+//     */
+//    public function unserialize($serialized)
+//    {
+//        list(
+//            $this->id,
+//            $this->photo,
+//            ) = unserialize($serialized, array('allowed_classes' => false));
+//    }
+
 }

@@ -15,6 +15,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SortieType extends AbstractType
@@ -55,6 +57,18 @@ class SortieType extends AbstractType
             'attr' => ['class' => 'btn btn-primary btn-block']
             ]);
 
+
+/*
+        $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) {
+            $form = $event->getForm();
+
+            $formOptions = [
+                'class' => Ville::class,
+                'query'
+            ]
+
+        });
+*/
     }
 
     public function configureOptions(OptionsResolver $resolver)

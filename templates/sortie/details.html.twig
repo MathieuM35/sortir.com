@@ -133,7 +133,7 @@
                 </thead>
                 {% for participant in sortie.participants %}
                     <tr>
-                        <td>{{ participant.username }} {% if participant is same as(sortie.organisateur)%}<span class="badge badge-primary">Organisateur</span> {% endif %}</td>
+                        <td><a href="{{ url('detail-profil',{'id':participant.id}) }}">{{ participant.username }} {% if participant is same as(sortie.organisateur)%}<span class="badge badge-primary">Organisateur</span> {% endif %}</a></td>
                         <td>{{ participant.prenom }} {{ participant.nom|upper }}</td>
                         <td>{{ participant.site.nom }}</td>
                     </tr>

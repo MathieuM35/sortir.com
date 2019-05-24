@@ -4,6 +4,9 @@
 
     <h1>{{ user.username }}</h1>
     <div>
+        {% if user.photo is not empty %}
+            <img src="{{ asset('uploads/photos/' ~ user.photo) }}" alt="Ma photo" style="width: 200px">
+        {% endif %}
         <p>Prénom : {{ user.prenom }}</p>
         <p>Nom : {{ user.nom }}</p>
         <p>Téléphone : {{ user.telephone }}</p>
