@@ -126,6 +126,25 @@
             {% endif %}
 
 
+    <!-- affichage des participants -->
+    <div class="row">
+        <h3>Liste des participants inscrits</h3>
+        <hr>
+        <div class="col-12">
+            <table class="table table-striped">
+                <thead>
+                <th>Pseudo</th>
+                <th>Nom</th>
+                <th>Site</th>
+                </thead>
+                {% for participant in sortie.participants %}
+                    <tr>
+                        <td><a href="{{ url('detail-profil',{'id':participant.id}) }}">{{ participant.username }} {% if participant is same as(sortie.organisateur)%}<span class="badge badge-primary">Organisateur</span> {% endif %}</a></td>
+                        <td>{{ participant.prenom }} {{ participant.nom|upper }}</td>
+                        <td>{{ participant.site.nom }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
         </div>
 
         <!-- affichage des participants -->

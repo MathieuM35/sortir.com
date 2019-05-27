@@ -36,7 +36,12 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ app.user.username|upper }}  <i class="fas fa-user-circle"></i>
+                        {{ app.user.username|upper }}
+                        {% if app.user.photo is not empty %}
+                            <img src="{{ asset('uploads/photos/' ~ app.user.photo) }}" style="width: 40px">
+                        {% else %}
+                            <i class="fas fa-user-circle"></i>
+                        {% endif %}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="{{ path('user-update') }}">Mon profil</a>

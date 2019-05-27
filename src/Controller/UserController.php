@@ -12,6 +12,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UserController extends Controller
 {
@@ -51,15 +53,34 @@ class UserController extends Controller
     /**
      * @Route("/user/update", name="user-update")
      */
-    public function updateProfil(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder){
+    public function updateProfil(Request $request, EntityManagerInterface $em){
         //Récupération de l'utilisateur connecté
         $user = $this->getUser();
         //Récupération du formulaire de l'utilisateur mis à jour
         $profilForm = $this->createForm(ProfilType::class, $user);
         $profilForm->handleRequest($request);
+
         if ($profilForm->isSubmitted() && $profilForm->isValid()) {
-            $hashed = $encoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($hashed);
+
+            dump($profilForm['photo']->getData());
+            if ($profilForm['photo']->getData() != null){
+                //$file stock le fichier uploadé
+                /**
+                 * @var Symfony\Component\HttpFoundation\File\UploadedFile $file
+                 */
+                $file = $user->getPhoto();
+
+                //$fileName = $this->md5(uniqid()).'.'.$file->guessExtension();
+                $fileName = $this->generateUniqueFileName().'.'.$file->guessExtension();
+                //Déplacer le fichier dans le dossier où les photos sont stockées
+                $file->move(
+                    $this->getParameter('photos_directory'),
+                    $fileName
+                );
+
+                // mettre à jour la propriété 'photo' pour stocker le nom du fichier au lieu de son contenu
+                $user->setPhoto($fileName);
+            }
 
             $em->persist($user);
             $em->flush();
@@ -69,6 +90,14 @@ class UserController extends Controller
 
         return $this->render("user/update.html.twig", ['profilForm'=>$profilForm->createView()]);
 
+    }
+
+    /**
+     * @return string
+     */
+    public function generateUniqueFileName(){
+
+        return md5(uniqid());
     }
 
     /**
@@ -82,7 +111,7 @@ class UserController extends Controller
         $mdpBDD = $utilisateurBDD->getPassword();
         dump('Le mot de passe utilisateur en BDD est : '.$mdpBDD);
         //Récupération du formulaire de mise à jour du mdp de l'utilisateur
-        $mdpForm = $this->createForm(MotDePasseType::class, $user, ['method' => 'GET']);
+        $mdpForm = $this->createForm(MotDePasseType::class, $user);
         $mdpForm->handleRequest($request);
         $mdpSaisi = $mdpForm['passwordActuel']->getData();
 
@@ -92,7 +121,6 @@ class UserController extends Controller
         dump('Le mot de passe saisi crypté est : '.$mdpSaisiCrypte);
 
         if(password_verify($mdpSaisi, $mdpBDD)){
-        //if ($mdpSaisiCrypte == $mdpBDD){
             if ($mdpForm->isSubmitted() && $mdpForm->isValid()) {
                 $hashed = $encoder->encodePassword($user, $user->getPassword());
                 $user->setPassword($hashed);

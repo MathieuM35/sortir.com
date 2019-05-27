@@ -7,8 +7,7 @@ use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -24,6 +23,7 @@ class ProfilType extends AbstractType
             ->add('telephone',TextType::class, ['label'=>'Nom :', 'attr'=>['placeholder'=>'Veuillez renseigner le numéro de téléphone']])
             ->add('email', EmailType::class, ['label'=>'Email :', 'attr'=>['placeholder'=>'Veuillez renseigner l\'adresse email']])
             ->add('site', EntityType::class, ['class' => Site::class, 'choice_label' => 'nom'])
+            ->add('photo', FileType::class, ['label' => 'Ma photo (.png, . jpeg, .jpg, .gif) :', 'data_class' => null, 'required' => false])
         ;
     }
 
