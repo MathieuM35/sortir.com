@@ -49,6 +49,7 @@ SELECT s, u
 FROM App\Entity\Sortie s
 JOIN s.participants u
 JOIN u.site si
+JOIN s.etat e
 WHERE
 DQL;
 
@@ -70,7 +71,8 @@ DQL;
             }
         }
 
-        $dql .= " s.id IS NOT NULL";
+//        $dql .= " s.id IS NOT NULL";
+        $dql .= " e.id != 7";
 
         //GESTION CHECKBOXES
 

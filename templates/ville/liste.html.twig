@@ -1,0 +1,33 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Gestion des villes{% endblock %}
+{% block main %}
+
+    <div>
+        <h2>Liste des villes :</h2>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Nom</th>
+            <th scope="col">Code postal</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ville in villes %}
+            <tr>
+                <td>{{ ville.nom }}</td>
+                <td>{{ ville.codePostal }}</td>
+            </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+    </div>
+
+    <div>
+        <a href="{{ path('ville_add') }}"><button class="btn btn-primary btn-lg btn-block">Ajouter une ville</button>
+            </a>
+    </div>
+
+
+{% endblock %}
