@@ -31,6 +31,16 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
             ->getOneOrNullResult();
     }
 
+    public function findByNomContient($nomRecherche){
+
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.nom LIKE :nomRecherche')
+            ->setParameter('nomRecherche','%'.$nomRecherche.'%')
+            ->orderBy('u.nom')
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return user[] Returns an array of user objects
     //  */

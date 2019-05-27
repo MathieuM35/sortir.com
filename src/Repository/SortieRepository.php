@@ -157,48 +157,6 @@ DQL;
         $sorties = $query->getResult();
         return $sorties;
 
-        //Gestion des checkboxes 23/04
-//        if ($criteres['organisateur']) {
-//            if ($champsRestrictif) {
-//                $qb->andWhere('s.organisateur = :organisateur');
-//            } else {
-//                $qb->orWhere('s.organisateur = :organisateur');
-//            }
-//            $qb->setParameter('organisateur', $user);
-//        }
-//        if ($criteres['inscrit']) {
-//            $qb->join('s.participants', 'us');
-//            $qb->addSelect('us');
-//            if ($champsRestrictif) {
-//                $qb->andWhere('us.id = :idUser');
-//            } else {
-//                $qb->orWhere('us.id = :idUser');
-//            }
-//            $qb->setParameter('idUser', $user);
-//        }
-//        if ($criteres['nonInscrit']) {
-////TODO
-////            $qb->join('s.participants','u');
-////            $qb->addSelect('u');
-////            $qb->andWhere('NOT u.id = :idUser');
-////            $qb->setParameter('idUser',$user);
-//        }
-//        if ($criteres['sortiePassee']) {
-//            if ($champsRestrictif) {
-//                $qb->andWhere('s.dateHeureDebut < :aujourdhui');
-//            } else {
-//                $qb->orWhere('s.dateHeureDebut < :aujourdhui');
-//            }
-//            $qb->setParameter('aujourdhui', new \DateTime());
-//        }
-
-//        //on affiche les sorties selon leur date
-//        $qb->orderBy('s.dateHeureDebut', 'ASC');
-//
-//        //on effectue la requete
-//        $query = $qb->getQuery();
-//        $sorties = $query->getResult();
-//        return $sorties;
     }
 
     public function findParticipantsParSortie($idSortie = 13)

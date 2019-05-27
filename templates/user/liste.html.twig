@@ -1,0 +1,82 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Gestion des utilisateurs{% endblock %}
+{% block main %}
+
+    <div>
+        <h2>Filtrer les utilisateurs :</h2>
+    </div>
+    {{ form_start(rechercheUserForm) }}
+
+    {{ form_label(rechercheUserForm.nomContient) }}
+    <div class="row">
+        <div class="col-8">
+            {{ form_widget(rechercheUserForm.nomContient) }}
+        </div>
+        <div class="col-4">
+            {{ form_widget(rechercheUserForm.rechercher) }}
+        </div>
+    </div>
+    <a href="{{ url('ville') }}">{{ form_widget(rechercheUserForm.voirTout) }}</a>
+
+    {{ form_end(rechercheUserForm) }}
+    <hr>
+
+    <div>
+        <h2>Liste des utilisateurs :</h2>
+    </div>
+    <table class="table table-striped table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Nom</th>
+            <th scope="col">Prénom</th>
+            <th scope="col">Site</th>
+            <th scope="col"></th>
+            <th scope="col">Actif</th>
+            <th scope="col" colspan="2">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.nom }}</td>
+                <td>{{ user.prenom }}</td>
+                <td>{{ user.site.nom }}</td>
+                <td>
+                    {% if user.administrateur is same as(true) %}
+                        <span class="badge badge-secondary">Admin</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.actif is same as(true) %}
+                        <i class="fas fa-check-circle" style="color:limegreen"></i>
+                    {% else %}
+                        <i class="fas fa-ban" style="color:grey"></i>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.actif is same as(true) %}
+                        <a href="{{ url('desactiver_user',{'id':user.id}) }}"><i class="fas fa-ban"></i></a>
+                    {% else %}
+                        <a href="{{ url('activer_user',{'id':user.id}) }}"><i style="color:limegreen"
+                                                                              class="fas fa-power-off"></i></a>
+                    {% endif %}
+                </td>
+
+
+                <td><a href="{{ url('delete_user',{'id':user.id}) }}"><i class="fas fa-trash-alt"></i></a></td>
+            </tr>
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+    </div>
+
+    <div>
+        <a href="{{ path('user-register') }}">
+            <button class="btn btn-primary btn-lg btn-block">Ajouter un utilisateur</button>
+        </a>
+    </div>
+
+
+{% endblock %}

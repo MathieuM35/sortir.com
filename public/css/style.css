@@ -67,3 +67,11 @@
     color:limegreen;
     text-align: center;
 }
+
+.voirTout{
+    margin-top: 5px;
+}
+
+.fa-trash-alt{
+    color: red;
+}
