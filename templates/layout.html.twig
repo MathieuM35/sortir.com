@@ -18,17 +18,16 @@
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
           crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ asset('css/bootstrap-yeti.css') }}">
-    {#        <link rel="stylesheet" href="{{ asset('css/app.css') }}">#}
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-lux.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
           integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <title>{% block title %}Sortir !{% endblock %}</title>
 </head>
-<body class="container-fluid">
-<header>{% include('inc/nav.html.twig') %}</header>
-{% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-{% endif %}
+<body>
+
+{% include('inc/nav.html.twig') %}
 
 {% for label,messages in app.flashes %}
     {% for message in messages %}
@@ -37,10 +36,25 @@
         </div>
     {% endfor %}
 {% endfor %}
-{% block main %}{% endblock %}
 
-<footer class="fixed-bottom">
-    <p>designed by Equipe Ketchup© {{ "now" | date("Y") }}</p>
+
+{% block main %}
+{% endblock %}
+
+
+<footer>
+    <div class="container-fluid">
+        <div class="py-3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <p class="mb-0 text-light">designed by Equipe Ketchup© {{ "now" | date("Y") }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </footer>
+
 </body>
 </html>

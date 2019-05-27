@@ -18,41 +18,48 @@
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
           crossorigin="anonymous">
-    {#    <link rel="stylesheet" href="{{ asset('css/app.css') }}">#}
+    <link rel="stylesheet" href="{{ asset('css/bootstrap-lux.css') }}">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Kalam:300,400,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
           integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
     <title>{% block title %}Sortir !{% endblock %}</title>
 </head>
 <body class="container-fluid loginPage">
-<div class="contentLogin col-12 col-md-6">
-    <h1>Sortir.com</h1>
-    <hr>
-    <h2>Connectez-vous !</h2>
-    <div class="formLogin">
-        {% if erreur %}
-            <div class="flash-error">{{ erreur.message }}</div>
-        {% endif %}
-        <form method="post">
-
-            <div class="form-group">
-                <label for="username">Identifiant :</label>
-                <input class="form-control" type="text" name="_username" id="username">
+<div class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="p-5 col-lg-6 bg-light">
+                <h1>Sortir.com</h1>
+                <p class="mb-3">Connectez-vous pour accéder à toutes vos sorties !</p>
+                {% if erreur %}
+                    <div class="flash-error">{{ erreur.message }}</div>
+                {% endif %}
+                <form method="post">
+                    <div class="form-group">
+                        <label for="username">Votre identifiant ou adresse email :</label>
+                        <input class="form-control" type="text" name="_username" id="username"
+                               placeholder="Identifiant ou email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Votre mot de passe :</label>
+                        <input class="form-control" type="password" name="_password" id="password"
+                               placeholder="Mot de passe">
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="_remember_me" checked>
+                            Se souvenir de moi
+                        </label>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary btn-lg btn-block">Connexion</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label for="password">Mot de passe :</label>
-                <input class="form-control" type="password" name="_password" id="password">
-            </div>
-            <label>
-                <input type="checkbox" name="_remember_me" checked>
-                Se souvenir de moi
-            </label>
-            <div>
-                <button class="btn btn-primary" type="submit">Connexion</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+
 </body>
 </html>
