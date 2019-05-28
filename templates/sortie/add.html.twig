@@ -58,7 +58,6 @@
         {{ form_end(formSortie) }}
     </div>
 
-    <script src="jquery-3.4.1.min.js"></script>
     <script>
         $( document ).ready(function () {
             $('#sortie_ville').change()
@@ -75,7 +74,7 @@
                 success: function(data) {
                     $('#sortie_lieu').empty();
                     $.each(data, function (id, lieu) {
-                        $('sortie_lieu').append($('<option value="'+ id + '">' + lieu + '</option>'))
+                        $('#sortie_lieu').append($('<option value="'+ id + '">' + lieu + '</option>'))
                     })
                     $('#sortie_lieu').change();
                 }
