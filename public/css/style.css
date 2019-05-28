@@ -24,6 +24,10 @@ h1, h2, h3, h4, h5{
     margin: auto;
 }
 
+.loginPage .form-control{
+    border:1px solid grey;
+}
+
 /*Home*/
 .searchForm{
     padding: 20px;

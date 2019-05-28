@@ -5253,8 +5253,8 @@ input[type="button"].btn-block {
 
 .badge {
   display: inline-block;
-  padding: 0.25em 0.4em;
-  font-size: 75%;
+  padding: 0.3em 0.8em;
+  font-size: 100%;
   font-weight: 700;
   line-height: 1;
   text-align: center;
@@ -5311,7 +5311,7 @@ a.badge-primary:focus, a.badge-primary.focus {
 
 .badge-secondary {
   color: #1a1a1a;
-  background-color: #fff;
+  background-color: lightgrey;
 }
 
 a.badge-secondary:hover, a.badge-secondary:focus {
@@ -10594,7 +10594,7 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .btn-sm, .btn-group-sm > .btn {
-  font-size: 10px;
+  /*font-size: 10px;*/
 }
 
 .btn-warning, .btn-warning:hover, .btn-warning:not([disabled]):not(.disabled):active, .btn-warning:focus {
@@ -10655,7 +10655,7 @@ th {
 }
 
 .dropdown-menu {
-  font-size: 0.765625rem;
+  font-size: 1rem;
   text-transform: none;
 }
 
