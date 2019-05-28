@@ -4,12 +4,6 @@
     <div class="container-fluid searchForm">
         <div class="container">
             <div class="row">
-                <a class="col-12" href="{{ path('creer_sortie') }}">
-                    <button type="button" class="btn btn-primary btn-lg btn-block">Créer une sortie !</button>
-                </a>
-            </div>
-            <hr>
-            <div class="row">
 
                 <div class="col-12 col-md-6">
                     {{ form_start(rechercheForm) }}
@@ -38,7 +32,7 @@
     </div>
 
     </div>
-    <div class="container">
+    <div class="container searchResults">
         {% if sorties|length > 0 %}
             <p>Nous vous proposons ces {{ sorties|length }} sortie(s) :</p>
         {% else %}
@@ -80,10 +74,38 @@
                             {% if app.user is same as(sortie.organisateur) %}
                                 <span class="badge badge-secondary">Vous !</span>
                             {% else %}
-                                <a href="{{ url('detail-profil',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom|first|upper }}
-                                    .</a>
+                                <!-- Lien trigger détails profils modal -->
+                                <a data-toggle="modal" data-target="#detailProfil"
+                                   href="{{ url('detail-profil',{'id':sortie.organisateur.id}) }}">
+                                    {{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom|first|upper }}.
+                                </a>
                             {% endif %}
                         </td>
+
+                        <!-- Modal détails profils -->
+                        <div class="modal fade" id="detailProfil" tabindex="-1" role="dialog"
+                             aria-labelledby="detailProfil" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Détails du profil de {{ sortie.organisateur.username }}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        {{ render(controller(
+                                            'App\\Controller\\UserController::consulterProfil',
+                                            { 'id':sortie.organisateur.id }
+                                        )) }}
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
                         <td>
@@ -107,5 +129,16 @@
                 {% endif %}
             {% endfor %}
         </table>
+    </div>
+    <div class="text-center py-3 addSortie"
+    <div class="container-fluid">
+        <div class="row">
+            <div class="mx-auto col-10 bg-white p-5 col-md-10">
+                <h1>Vous aussi, créez votre sortie !</h1>
+                <p class="mb-3">Vous aussi proposez une sortie à l'ensemble des étudiants de l'ENI !</p>
+                <a href="{{ path('creer_sortie') }}"><button class="btn btn-primary btn-block">Créez une sortie !</button></a>
+            </div>
+        </div>
+    </div>
     </div>
 {% endblock %}

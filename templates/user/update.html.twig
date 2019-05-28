@@ -2,52 +2,67 @@
 {% block title %}Modifier votre profil{% endblock %}
 {% block main %}
 
-    <h1>Modifier mon profil</h1>
-    <div>
-        {% if app.user.photo is not empty %}
-            <img src="{{ asset('uploads/photos/' ~ app.user.photo) }}" alt="Ma photo" style="width: 200px">
-        {% endif %}
-
-        {{ form_start(profilForm) }}
-        <div class="group">
-            {{ form_label(profilForm.username) }}
-            {{ form_widget(profilForm.username) }}
+    <div class="text-center py-3 addSortie">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="mx-auto col-10 bg-white p-5 col-md-10">
+                    <h1>Modifier mon profil</h1>
+                </div>
+            </div>
         </div>
-
-        <div class="group">
-            {{ form_label(profilForm.prenom) }}
-            {{ form_widget(profilForm.prenom) }}
-        </div>
-
-        <div class="group">
-            {{ form_label(profilForm.nom) }}
-            {{ form_widget(profilForm.nom) }}
-        </div>
-
-        <div class="group">
-            {{ form_label(profilForm.telephone) }}
-            {{ form_widget(profilForm.telephone) }}
-        </div>
-
-        <div class="group">
-            {{ form_label(profilForm.email) }}
-            {{ form_widget(profilForm.email) }}
-        </div>
-
-        <div class="group">
-            {{ form_label(profilForm.site) }}
-            {{ form_widget(profilForm.site) }}
-        </div>
-
-        <div>
-            {{ form_row(profilForm.photo) }}
-        </div>
-
-        <button type="submit">Enregistrer</button>
-        {{ form_end(profilForm) }}
     </div>
 
-    <a href="{{ path('mdp-update') }}">
-        <button>Modifier mot de passe</button>
-    </a>
+    <div class="container-fluid mainContent">
+        <div class="container">
+
+            <h1></h1>
+            <div>
+                        {% if app.user.photo is not empty %}
+                            <img src="{{ asset('uploads/photos/' ~ app.user.photo) }}" alt="Ma photo" style="width: 200px">
+                        {% endif %}
+
+                {{ form_start(profilForm) }}
+                <div class="group">
+                    {{ form_label(profilForm.username) }}
+                    {{ form_widget(profilForm.username) }}
+                </div>
+
+                <div class="group">
+                    {{ form_label(profilForm.prenom) }}
+                    {{ form_widget(profilForm.prenom) }}
+                </div>
+
+                <div class="group">
+                    {{ form_label(profilForm.nom) }}
+                    {{ form_widget(profilForm.nom) }}
+                </div>
+
+                <div class="group">
+                    {{ form_label(profilForm.telephone) }}
+                    {{ form_widget(profilForm.telephone) }}
+                </div>
+
+                <div class="group">
+                    {{ form_label(profilForm.email) }}
+                    {{ form_widget(profilForm.email) }}
+                </div>
+
+                <div class="group">
+                    {{ form_label(profilForm.site) }}
+                    {{ form_widget(profilForm.site) }}
+                </div>
+
+                <div>
+                    {{ form_row(profilForm.photo) }}
+                </div>
+
+                <button class="btn btn-primary" type="submit">Enregistrer</button>
+                {{ form_end(profilForm) }}
+            </div>
+            <a href="{{ path('mdp-update') }}">
+                <button class="btn btn-outline-secondary">Modifier mot de passe</button>
+            </a>
+
+        </div>
+    </div>
 {% endblock %}
