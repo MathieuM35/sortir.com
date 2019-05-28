@@ -20,6 +20,12 @@
             {{ form_row(formSortie.ville) }}
             {{ form_row(formSortie.lieu) }}
         </div>
+        <div>
+            <p id="infoLieu"></p>
+            <p id="infoCp"></p>
+            <p id="infoLatitude"></p>
+            <p id="infoLongitude"></p>
+        </div>
     </div>
     <div class="row">
         <div class="col-3"> {{ form_widget(formSortie.enregister, { 'label': 'Enregister' }) }}</div>
@@ -27,5 +33,75 @@
         <div class="col-3"> <button type="submit" name="annuler" id="annuler" class="btn btn-secondary btn-block">Annuler</button></div>
         {{ form_end(formSortie) }}
     </div>
+
+    <script src="jquery-3.4.1.min.js"></script>
+    <script>
+        $( document ).ready(function () {
+            $('#sortie_ville').change()
+        });
+
+        $('#sortie_ville').change(function(e) {
+            var choix = $(this).val();
+            $.ajax({
+                url : "{{ path('requeteAjax') }}",
+                type: 'POST',
+                dataType: 'json',
+                data: { 'choix' : choix },
+                async: true,
+                success: function(data) {
+                    $('#sortie_lieu').empty();
+                    $.each(data, function (id, lieu) {
+                        $('sortie_lieu').append($('<option value="'+ id + '">' + lieu + '</option>'))
+                    })
+                    $('#sortie_lieu').change();
+                }
+            });
+            e.preventDefault();
+        });
+
+    </script>
+
+    <script>
+        $('#sortie_lieu').change(function (e) {
+            var detailLieu = $(this).val();
+            $.ajax({
+                url : "{{ path('requeteLieu') }}",
+                type: 'POST',
+                dataType: 'json',
+                data: { 'detailLieu' : detailLieu },
+                async: true,
+                success: function(data) {
+                    $('#infoLieu').text('Adresse : ' + data.rue);
+                    $('#infoCp').text('Code postal : ' + data.codePostal);
+                    $('#infoLatitude').text('Latitude : ' + data.latitude);
+                    $('#infoLongitude').text('Longitude : ' + data.longitude);
+                }
+            });
+            e.preventDefault();
+        });
+
+    </script>
+
+
+{#    <script   src="https://code.jquery.com/jquery-2.2.4.min.js"   integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="   crossorigin="anonymous"></script>
+    <script>
+        var $ville = $('#sortie_ville')
+        $ville.change(function() {
+            var $formSortie = $(this).closest('formSortie');
+            var data = {};
+            data[$ville.attr('name')] = $ville.val();
+
+            $ajax({
+                url : $formSortie.attr('action'),
+                type: $formSortie.attr('method'),
+                data : data,
+                success: function(html) {
+                    $('#sortie_lieu').replaceWith(
+                        $(html).find('#sortie_lieu')
+                    );
+                }
+            })
+        })
+    </script>#}
 
 {% endblock %}
