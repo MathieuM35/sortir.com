@@ -1,0 +1,12 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Importer des utilisateurs{% endblock %}
+{% block main %}
+    <div>
+        <h2>Importer des utilisateurs :</h2>
+    </div>
+    {{ form_start(importCsvForm) }}
+    <div class="row">
+        <div class="col-12">{{ form_row(importCsvForm.csvfile) }}</div>
+    </div>
+    {{ form_end(importCsvForm) }}
+{% endblock %}
