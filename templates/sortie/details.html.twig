@@ -159,14 +159,14 @@
 
             {# ANNULER LA SORTIE #}
             {# Si l'utilisateur courant est l'ORGANISATEUR ou un ADMIN #}
-            {#            {% if app.user is same as(sortie.organisateur) or app.user.administrateur %}#}
-            {# Si la sortie n'est pas En cours, Passée, Annulée ou Archivée #}
-            {% if sortie.etat.id == 1 or sortie.etat.id == 2 or sortie.etat.id == 3 %}
-                <a href="{{ url('annulation',{'id':sortie.id}) }}">
-                    <button type="button" class="btn btn-danger">Annuler la sortie</button>
-                </a>
+            {% if app.user is same as(sortie.organisateur) or app.user.administrateur %}
+                {# Si la sortie n'est pas En cours, Passée, Annulée ou Archivée #}
+                {% if sortie.etat.id == 1 or sortie.etat.id == 2 or sortie.etat.id == 3 %}
+                    <a href="{{ url('annulation',{'id':sortie.id}) }}">
+                        <button type="button" class="btn btn-danger">Annuler la sortie</button>
+                    </a>
+                {% endif %}
             {% endif %}
-            {#            {% endif %}#}
         </div>
     </div>
 
@@ -185,8 +185,43 @@
                     {% for participant in sortie.participants %}
                         <tr>
                             <td>
-                                <a href="{{ url('detail-profil',{'id':participant.id}) }}">{{ participant.username }} {% if participant is same as(sortie.organisateur) %}
-                                        <span class="badge badge-primary">Organisateur</span> {% endif %}</a></td>
+                                <a data-toggle="modal" data-target="#detailProfil{{ participant.id }}"
+                                   href="{{ url('detail-profil',{'id':participant.id}) }}">{{ participant.username }}
+                                    {% if participant is same as(sortie.organisateur) %}
+                                        <span class="badge badge-primary">Organisateur</span>
+                                    {% endif %}
+                                </a>
+                                <!-- Modal détails profils -->
+                                <div class="modal fade" id="detailProfil{{ participant.id }}" tabindex="-1"
+                                     role="dialog"
+                                     aria-labelledby="detailProfil" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Détails du profil
+                                                    de {{ participant.username }}</h5>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                {{ render(controller(
+                                                    'App\\Controller\\UserController::consulterProfil',
+                                                    { 'id':participant.id }
+                                                )) }}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                    Fermer
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </td>
                             <td>{{ participant.prenom }} {{ participant.nom|upper }}</td>
                             <td>{{ participant.site.nom }}</td>
                         </tr>
@@ -196,5 +231,7 @@
             </div>
         </div>
     </div>
+
+
 
 {% endblock %}
