@@ -1,57 +1,58 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-    <a class="navbar-brand" href="{{ path('liste_sorties') }}">Logo</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+    <div class="container"><a class="navbar-brand" href="{{ path('liste_sorties') }}">[Logo] Sortir.com</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('liste_sorties') }}">Accueil</a>
-            </li>
-
-
-            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                <li class="nav-item"><a class="nav-link" href="{{ path('creer_sortie') }}">Créer une sortie</a></li>
-            {% endif %}
-
-
-            {% if is_granted('ROLE_ADMIN') %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Admin</i>
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{{ path('user-register') }}">Créer un profil</a>
-                        <a class="dropdown-item" href="{{ path('liste_users') }}">Gérer les utilisateurs</a>
-                        <a class="dropdown-item" href="{{ path('site') }}">Gérer les sites</a>
-                        <a class="dropdown-item" href="{{ path('ville') }}">Gérer les villes</a>
-                    </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('liste_sorties') }}">Accueil</a>
                 </li>
-            {% endif %}
 
 
-            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ app.user.username|upper }}
-                        {% if app.user.photo is not empty %}
-                            <img src="{{ asset('uploads/photos/' ~ app.user.photo) }}" style="width: 40px">
-                        {% else %}
-                            <i class="fas fa-user-circle"></i>
-                        {% endif %}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{{ path('user-update') }}">Mon profil</a>
-                        <a class="dropdown-item" href="{{ path('logout') }}">Déconnexion</a>
-                    </div>
-                </li>
-            {% else %}
-                <li class="nav-item"><a class="nav-link" href="{{ path('login') }}">Se connecter</a></li>
-            {% endif %}
-        </ul>
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <li class="nav-item"><a class="nav-link" href="{{ path('creer_sortie') }}">Créer une sortie</a></li>
+                {% endif %}
+
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Admin</i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ path('user-register') }}">Créer un profil</a>
+                            <a class="dropdown-item" href="{{ path('liste_users') }}">Gérer les utilisateurs</a>
+                            <a class="dropdown-item" href="{{ path('site') }}">Gérer les sites</a>
+                            <a class="dropdown-item" href="{{ path('ville') }}">Gérer les villes</a>
+                        </div>
+                    </li>
+                {% endif %}
+
+
+                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ app.user.username|upper }}
+                            {% if app.user.photo is not empty %}
+                                <img src="{{ asset('uploads/photos/' ~ app.user.photo) }}" style="width: 40px">
+                            {% else %}
+                                <i class="fas fa-user-circle"></i>
+                            {% endif %}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ path('user-update') }}">Mon profil</a>
+                            <a class="dropdown-item" href="{{ path('logout') }}">Déconnexion</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ path('login') }}">Se connecter</a></li>
+                {% endif %}
+            </ul>
+        </div>
     </div>
 </nav>

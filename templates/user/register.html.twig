@@ -2,52 +2,65 @@
 {% block title %}Enregistrer un utilisateur{% endblock %}
 {% block main %}
 
-    <h1>Enregistrer un utilisateur</h1>
-    <div>
-        {{ form_start(registerForm) }}
-
-        <div class="group">
-            {{ form_label(registerForm.username) }}
-            {{ form_widget(registerForm.username) }}
+    <div class="text-center py-3 addSortie">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="mx-auto col-10 bg-white p-5 col-md-10">
+                    <h1>Enregistrer un utilisateur</h1>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <div class="group">
-            {{ form_label(registerForm.prenom) }}
-            {{ form_widget(registerForm.prenom) }}
+    <div class="container-fluid mainContent">
+        <div class="container">
+            <div>
+                {{ form_start(registerForm) }}
+
+                <div class="group">
+                    {{ form_label(registerForm.username) }}
+                    {{ form_widget(registerForm.username) }}
+                </div>
+
+                <div class="group">
+                    {{ form_label(registerForm.prenom) }}
+                    {{ form_widget(registerForm.prenom) }}
+                </div>
+
+                <div class="group">
+                    {{ form_label(registerForm.nom) }}
+                    {{ form_widget(registerForm.nom) }}
+                </div>
+
+                <div class="group">
+                    {{ form_label(registerForm.telephone) }}
+                    {{ form_widget(registerForm.telephone) }}
+                </div>
+
+                <div class="group">
+                    {{ form_label(registerForm.email) }}
+                    {{ form_widget(registerForm.email) }}
+                </div>
+
+                <div class="group">
+                    {{ form_label(registerForm.site) }}
+                    {{ form_widget(registerForm.site) }}
+                </div>
+
+                <div class="group">
+                    {{ form_label(registerForm.administrateur) }}
+                    {{ form_widget(registerForm.administrateur) }}
+                </div>
+
+                <div class="group">
+                    {{ form_label(registerForm.actif) }}
+                    {{ form_widget(registerForm.actif) }}
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block btn-lg">Enregistrer</button>
+                {{ form_end(registerForm) }}
+            </div>
         </div>
-
-        <div class="group">
-            {{ form_label(registerForm.nom) }}
-            {{ form_widget(registerForm.nom) }}
-        </div>
-
-        <div class="group">
-            {{ form_label(registerForm.telephone) }}
-            {{ form_widget(registerForm.telephone) }}
-        </div>
-
-        <div class="group">
-            {{ form_label(registerForm.email) }}
-            {{ form_widget(registerForm.email) }}
-        </div>
-
-        <div class="group">
-            {{ form_label(registerForm.site) }}
-            {{ form_widget(registerForm.site) }}
-        </div>
-
-        <div class="group">
-            {{ form_label(registerForm.administrateur) }}
-            {{ form_widget(registerForm.administrateur) }}
-        </div>
-
-        <div class="group">
-            {{ form_label(registerForm.actif) }}
-            {{ form_widget(registerForm.actif) }}
-        </div>
-
-        <button type="submit">Enregistrer</button>
-        {{ form_end(registerForm) }}
     </div>
 
 {% endblock %}
