@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Sortie;
 use App\Entity\User;
+use App\Entity\Ville;
 use App\Form\MotDePasseType;
 use App\Form\ProfilType;
+use App\Form\RechercheUtilisateurType;
+use App\Form\RechercheVilleType;
 use App\Form\RegisterType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -17,15 +21,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class UserController extends Controller
 {
-    /**
-     * @Route("/user", name="user")
-     */
-    public function index()
-    {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
-    }
 
     /**
      * @Route("/register", name="user-register")
@@ -169,6 +164,86 @@ class UserController extends Controller
 
         return $this->render('user/detail.html.twig', ['user' => $user]);
 
+    }
+
+    /**
+     * @Route("/users/liste",name="liste_users")
+     */
+    public function liste(Request $request){
+
+        //barre de recherche d'un utilisateur
+        $rechercheUserForm = $this->createForm(RechercheUtilisateurType::class);
+        $rechercheUserForm->handleRequest($request);
+
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $users = $userRepo->findAll();
+
+
+        if($rechercheUserForm->isSubmitted() && $rechercheUserForm->isValid()){
+            if ($rechercheUserForm->get('rechercher')->isClicked()){
+                $nomUserContient = $rechercheUserForm->getData();
+                $users = $userRepo->findByNomContient($nomUserContient["nomContient"]);
+            }
+            if ($rechercheUserForm->get('voirTout')->isClicked()){
+                $users = $userRepo->findAll();
+            }
+        }
+
+        return $this->render('user/liste.html.twig', [
+            'rechercheUserForm'=>$rechercheUserForm->createView(),
+            'controller_name' => 'UserController',
+            'users' => $users,
+        ]);
+    }
+
+    /**
+     * @Route("/users/liste/desactiver/{id}", name="desactiver_user")
+     * @param $id id de l'user a rendre inactif
+     * @param EntityManagerInterface $em
+     */
+    public function rendreInactif($id, EntityManagerInterface $em){
+        //on récupère le user concerné via l'id passé en paramètre
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->find($id);
+
+        $user->setActif(0);
+        $em->persist($user);
+        $em->flush();
+        $this->addFlash("success","Utilisateur désactivé avec succès !");
+        return $this->redirectToRoute("liste_users");
+    }
+
+    /**
+     * @Route("/users/liste/activer/{id}", name="activer_user")
+     * @param $id id de l'user a rendre actif
+     * @param EntityManagerInterface $em
+     */
+    public function rendreActif($id, EntityManagerInterface $em){
+        //on récupère le user concerné via l'id passé en paramètre
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->find($id);
+
+        $user->setActif(1);
+        $em->persist($user);
+        $em->flush();
+        $this->addFlash("success","Utilisateur activé avec succès !");
+        return $this->redirectToRoute("liste_users");
+    }
+
+    /**
+     * @Route("/users/liste/delete/{id}", name="delete_user")
+     * @param $id id de l'user a supprimer
+     * @param EntityManagerInterface $em
+     */
+    public function delete($id, EntityManagerInterface $em){
+        //on récupère le user concerné via l'id passé en paramètre
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->find($id);
+
+        $em->remove($user);
+        $em->flush();
+        $this->addFlash("success","Utilisateur supprimé avec succès !");
+        return $this->redirectToRoute("liste_users");
     }
 
 }

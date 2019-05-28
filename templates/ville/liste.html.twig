@@ -1,0 +1,55 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Gestion des villes{% endblock %}
+{% block main %}
+
+    <div class="container">
+        <div>
+            <h2>Filtrer les villes :</h2>
+        </div>
+        {{ form_start(rechercheVilleForm) }}
+
+        {{ form_label(rechercheVilleForm.nomContient) }}
+        <div class="row">
+            <div class="col-8">
+                {{ form_widget(rechercheVilleForm.nomContient) }}
+            </div>
+            <div class="col-4">
+                {{ form_widget(rechercheVilleForm.rechercher) }}
+            </div>
+        </div>
+        <a href="{{ url('ville') }}">{{ form_widget(rechercheVilleForm.voirTout) }}</a>
+
+        {{ form_end(rechercheVilleForm) }}
+        <hr>
+        <div>
+            <h2>Liste des villes :</h2>
+        </div>
+        <div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Code postal</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for ville in villes %}
+                    <tr>
+                        <td>{{ ville.nom }}</td>
+                        <td>{{ ville.codePostal }}</td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+
+        <div>
+            <a href="{{ path('ville_add') }}">
+                <button class="btn btn-primary btn-lg btn-block">Ajouter une ville</button>
+            </a>
+        </div>
+
+    </div>
+{% endblock %}

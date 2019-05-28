@@ -25,8 +25,9 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="{{ path('user-register') }}">Créer un profil</a>
+                        <a class="dropdown-item" href="{{ path('liste_users') }}">Gérer les utilisateurs</a>
                         <a class="dropdown-item" href="{{ path('site') }}">Gérer les sites</a>
-                        <a class="dropdown-item" href="{{ path('site') }}">Gérer les villes</a><!-- revoir le chemin -->
+                        <a class="dropdown-item" href="{{ path('ville') }}">Gérer les villes</a>
                     </div>
                 </li>
             {% endif %}

@@ -96,10 +96,10 @@ class SortieController extends Controller
             $erreurs = "";
             //on vérifie les dates
             if ($sortie->getDateHeureDebut() < new \DateTime()) {
-                $erreurs .= " La date de debut de la sortie ne peut pas être passée. ";
+                $erreurs .= " La date de debut de la sortie ne peut pas être déjà passée. ";
             }
             if ($sortie->getDateLimiteInscription() < new  \DateTime()) {
-                $erreurs .= " La date de debut de la sortie ne peut pas être passée. ";
+                $erreurs .= " La date de debut de limite d'inscription ne peut pas être déjà passée. ";
             }
             if ($sortie->getDateLimiteInscription() > $sortie->getDateHeureDebut()) {
                 $erreurs .= " La date limite d'inscription doit être avant le début de la sortie. ";

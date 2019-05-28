@@ -1,15 +1,30 @@
 {% extends 'layout.html.twig' %}
 {% block title %}Enregistrer un utilisateur{% endblock %}
-{% block main %}
 
+{% block main %}
     <div>
         <h2>Liste des sites :</h2>
-        {% for site in sites %}
-            <div>
-                <p>{{ site.nom }}</p>
-            </div>
-        {% endfor %}
     </div>
-    <a href="{{ path('site_add') }}">Ajouter un site</a>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Nom</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for site in sites %}
+            <tr>
+                <td>{{ site.nom }}</td>
+            </tr>
+        {% endfor %}
 
+        </tbody>
+    </table>
+    </div>
+
+    <div>
+        <a href="{{ path('site_add') }}">
+            <button class="btn btn-primary btn-lg btn-block">Ajouter un site</button>
+        </a>
+    </div>
 {% endblock %}
