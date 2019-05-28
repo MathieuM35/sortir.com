@@ -51,14 +51,13 @@
             <p id="infoLongitude"></p>
         </div>
     </div>
-{#    <div class="row">#}
-{#        <div class="col-3"> {{ form_widget(formSortie.enregister, { 'label': 'Enregister' }) }}</div>#}
-{#        <div class="col-6"> {{ form_widget(formSortie.publier, { 'label': 'Publier' }) }}</div>#}
-{#        <div class="col-3"> <button type="submit" name="annuler" id="annuler" class="btn btn-secondary btn-block">Annuler</button></div>#}
-{#        {{ form_end(formSortie) }}#}
-{#    </div>#}
+    <div class="row">
+        <div class="col-3"> {{ form_widget(formSortie.enregister, { 'label': 'Enregister' }) }}</div>
+        <div class="col-6"> {{ form_widget(formSortie.publier, { 'label': 'Publier' }) }}</div>
+        <div class="col-3"> <button type="submit" name="annuler" id="annuler" class="btn btn-secondary btn-block">Annuler</button></div>
+        {{ form_end(formSortie) }}
+    </div>
 
-    <script src="jquery-3.4.1.min.js"></script>
     <script>
         $( document ).ready(function () {
             $('#sortie_ville').change()
@@ -75,7 +74,7 @@
                 success: function(data) {
                     $('#sortie_lieu').empty();
                     $.each(data, function (id, lieu) {
-                        $('sortie_lieu').append($('<option value="'+ id + '">' + lieu + '</option>'))
+                        $('#sortie_lieu').append($('<option value="'+ id + '">' + lieu + '</option>'))
                     })
                     $('#sortie_lieu').change();
                 }
