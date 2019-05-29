@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
@@ -77,6 +79,30 @@ class User implements AdvancedUserInterface
     private $sortiesOrganise;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Groupe", mappedBy="createur")
+     */
+    private $groupeCreateur;
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getGroupes(): ArrayCollection
+    {
+        return $this->groupes;
+    }
+
+    /**
+     * @param ArrayCollection $groupes
+     * @return User
+     */
+    public function setGroupes(ArrayCollection $groupes): User
+    {
+        $this->groupes = $groupes;
+        return $this;
+    }
+
+
+    /**
      * @Assert\Length(min="2", max="255", minMessage="Le mot de passe doit contenir au moins {{ limit }} caractères !", maxMessage="Le mot de passe ne doit pas dépasser {{ limit }} caractères !")
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -93,6 +119,14 @@ class User implements AdvancedUserInterface
      * @Assert\File(mimeTypes={ "image/png","image/jpeg","image/jpg","image/gif" })
      */
     private $photo;
+
+
+
+    public function __construct()
+    {
+        $this->groupes = new ArrayCollection();
+        $this->groupeCreateur = new ArrayCollection();
+    }
 
     /**
      * @return mixed
@@ -369,4 +403,37 @@ class User implements AdvancedUserInterface
     {
         return $this->actif;
     }
+
+    /**
+     * @return Collection|Groupe[]
+     */
+    public function getGroupeCreateur(): Collection
+    {
+        return $this->groupeCreateur;
+    }
+
+    public function addGroupeCreateur(Groupe $groupeCreateur): self
+    {
+        if (!$this->groupeCreateur->contains($groupeCreateur)) {
+            $this->groupeCreateur[] = $groupeCreateur;
+            $groupeCreateur->setCreateur($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGroupeCreateur(Groupe $groupeCreateur): self
+    {
+        if ($this->groupeCreateur->contains($groupeCreateur)) {
+            $this->groupeCreateur->removeElement($groupeCreateur);
+            // set the owning side to null (unless already changed)
+            if ($groupeCreateur->getCreateur() === $this) {
+                $groupeCreateur->setCreateur(null);
+            }
+        }
+
+        return $this;
+    }
+
+
 }

@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Groupe{% endblock %}
+
+{% block body %}
+    <h1>Groupe</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ groupe.id }}</td>
+            </tr>
+            <tr>
+                <th>Nom</th>
+                <td>{{ groupe.nom }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% for membre in groupe.membres %}
+    <p>{{ membre.nom }}</p>
+    {% endfor %}
+
+    <a href="{{ path('groupe_index') }}">back to list</a>
+
+    <a href="{{ path('groupe_edit', {'id': groupe.id}) }}">edit</a>
+
+    {{ include('groupe/_delete_form.html.twig') }}
+{% endblock %}
