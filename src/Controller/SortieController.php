@@ -128,6 +128,8 @@ class SortieController extends Controller
                     $user = new User();
                     $sortie->addParticipant($userRepo->find($membre));
                 }
+            } else{
+                $sortie->setPrivee(false);
             }
 
             //on set un état différent en fonction du bouton submit cliqué (Enregistrer ou Publier)
