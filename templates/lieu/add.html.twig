@@ -1,0 +1,22 @@
+{% extends 'layout.html.twig' %}
+
+{% block main %}
+
+    <div class="text-center py-3 addSortie">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="mx-auto col-10 bg-white p-5 col-md-10">
+                    <h1>Créer un lieu !</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid mainContent">
+        {{ form_start(lieuForm) }}
+        {{ form_widget(lieuForm) }}
+        <button class="btn btn-primary" type="submit">Enregistrer</button>
+        {{ form_end(lieuForm) }}
+    </div>
+
+{% endblock %}

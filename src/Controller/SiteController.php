@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Site;
+use App\Form\RechercheSiteType;
 use App\Form\SiteType;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -15,11 +15,25 @@ class SiteController extends Controller
     /**
      * @Route("/site", name="site")
      */
-    public function liste()
+    public function liste(EntityManagerInterface $em, Request $request)
     {
+        $rechercheSiteForm = $this->createForm(RechercheSiteType::class);
+        $rechercheSiteForm->handleRequest($request);
+
         $siteRepo = $this->getDoctrine()->getRepository(Site::class);
         $sites = $siteRepo->findAll();
-        return $this->render('site/liste.html.twig', [
+
+        if ($rechercheSiteForm->isSubmitted() && $rechercheSiteForm->isValid()){
+            if ($rechercheSiteForm->get('rechercher')->isClicked()){
+                $nomSiteContient = $rechercheSiteForm->getData();
+                $sites = $siteRepo->findByMotCle($nomSiteContient['nomContient']);
+            }
+            if ($rechercheSiteForm->get('voirTout')->isClicked()){
+                $sites = $siteRepo->findAll();
+            }
+        }
+
+        return $this->render('site/liste.html.twig', ['rechercheSiteForm'=>$rechercheSiteForm->createView(),
             'controller_name' => 'SiteController',
             'sites' => $sites,
         ]);

@@ -19,6 +19,16 @@ class SiteRepository extends ServiceEntityRepository
         parent::__construct($registry, Site::class);
     }
 
+    public function findByMotCle($motCle)
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.nom LIKE :motCle')
+            ->setParameter(':motCle', '%'.$motCle.'%')
+            ->orderBy('s.nom')
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Site[] Returns an array of Site objects
     //  */

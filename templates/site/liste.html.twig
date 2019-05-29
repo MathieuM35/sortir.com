@@ -1,26 +1,63 @@
 {% extends 'layout.html.twig' %}
-{% block title %}Enregistrer un utilisateur{% endblock %}
+{% block title %}Gestion des sites{% endblock %}
 
 {% block main %}
-    <div>
-        <h2>Liste des sites :</h2>
-    </div>
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th scope="col">Nom</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for site in sites %}
-            <tr>
-                <td>{{ site.nom }}</td>
-            </tr>
-        {% endfor %}
 
-        </tbody>
-    </table>
+    <div class="text-center py-3 addSortie">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="mx-auto col-10 bg-white p-5 col-md-10">
+                    <h1>Gestion des sites</h1>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <div class="container-fluid searchForm">
+        <div class="container">
+            <div>
+                <h3>Filtrer les sites :</h3>
+            </div>
+            {{ form_start(rechercheSiteForm) }}
+
+            {{ form_label(rechercheSiteForm.nomContient) }}
+            <div class="row">
+                <div class="col-8">
+                    {{ form_widget(rechercheSiteForm.nomContient) }}
+                </div>
+                <div class="col-4">
+                    {{ form_widget(rechercheSiteForm.rechercher) }}
+                </div>
+            </div>
+            <a href="{{ url('site') }}">{{ form_widget(rechercheSiteForm.voirTout) }}</a>
+
+            {{ form_end(rechercheSiteForm) }}
+        </div>
+    </div>
+
+    <div class="container searchResults">
+        <div>
+            <h2>Liste des sites :</h2>
+        </div>
+        <div>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th scope="col">Nom</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for site in sites %}
+                    <tr>
+                        <td>{{ site.nom }}</td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 
     <div>
         <a href="{{ path('site_add') }}">

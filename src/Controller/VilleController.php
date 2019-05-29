@@ -59,6 +59,6 @@ class VilleController extends Controller
             $this->addFlash("success", "La ville a bien été créé !");
             return $this->redirectToRoute('ville', []);
         }
-        return $this->render('ville/add.html.twig', ["villeForm" => $villeForm->createView()]);
+            return $this->render('ville/add.html.twig', ["villeForm" => $villeForm->createView()]);
     }
 }
