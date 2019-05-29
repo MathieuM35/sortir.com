@@ -1,0 +1,18 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Reinitialisez votre mot de passe{% endblock %}
+{% block main %}
+
+    <h1>Reinitialisez votre mot de passe</h1>
+    <div>
+        {{ form_start(mdpReinitialiseForm) }}
+
+        <div class="group">
+            {{ form_label(mdpReinitialiseForm.password) }}
+            {{ form_widget(mdpReinitialiseForm.password) }}
+        </div>
+
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Valider</button>
+        {{ form_end(mdpReinitialiseForm) }}
+    </div>
+
+{% endblock %}

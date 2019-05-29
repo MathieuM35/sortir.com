@@ -6,17 +6,21 @@ use App\Entity\Sortie;
 use App\Entity\User;
 use App\Entity\Ville;
 use App\Form\ImportCsvType;
+use App\Form\MdpReinitialiseType;
 use App\Form\MotDePasseType;
 use App\Form\ProfilType;
 use App\Form\RechercheUtilisateurType;
 use App\Form\RechercheVilleType;
 use App\Form\RegisterType;
+use App\Form\MdpOublieType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -105,6 +109,7 @@ class UserController extends Controller
     {
         //Récupération de l'utilisateur connecté
         $user = $this->getUser();
+        $photoInitiale = $this->getUser()->getPhoto();
         //Récupération du formulaire de l'utilisateur mis à jour
         $profilForm = $this->createForm(ProfilType::class, $user);
         $profilForm->handleRequest($request);
@@ -129,12 +134,14 @@ class UserController extends Controller
 
                 // mettre à jour la propriété 'photo' pour stocker le nom du fichier au lieu de son contenu
                 $user->setPhoto($fileName);
+            } else {
+                $user->setPhoto($photoInitiale);
             }
 
             $em->persist($user);
             $em->flush();
             $this->addFlash("success", "utilisateur enregistré !");
-            $this->redirectToRoute("liste_sorties");
+            return $this->redirectToRoute("liste_sorties");
         }
 
         return $this->render("user/update.html.twig", ['profilForm' => $profilForm->createView()]);
@@ -316,6 +323,86 @@ class UserController extends Controller
         $em->flush();
         $this->addFlash("success", "Utilisateur supprimé avec succès !");
         return $this->redirectToRoute("liste_users");
+    }
+
+    /**
+     * @Route("/user/mdp-oublie", name="mdp_oublie"))
+     */
+    public function recevoirLienMDPOublie(Request $request, TokenGeneratorInterface $tokenGenerator, EntityManagerInterface $entityManager, \Swift_Mailer $mailer){
+
+        $mdpOublieForm = $this->createForm(MdpOublieType::class);
+        $mdpOublieForm->handleRequest($request);
+
+        if ($mdpOublieForm->isSubmitted() && $mdpOublieForm->isValid()){
+
+            $email = $mdpOublieForm['email']->getData();
+            $userRepo = $this->getDoctrine()->getRepository(User::class);
+            $user = $userRepo->findOneByEmail($email);
+
+            if ($user === null){
+                $this->addFlash('error', 'Email Inconnu, veuillez saisir votre email !');
+                return $this->redirectToRoute('mdp_oublie');
+            }
+
+            $token = $tokenGenerator->generateToken();
+
+            try{
+                $user->setResetToken($token);
+                $entityManager->flush();
+            } catch (\Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+                return $this->redirectToRoute('mdp_oublie');
+            }
+
+            $urlcible = $this->generateUrl('reinitialiser_mdp', array('token' => $token), UrlGeneratorInterface::ABSOLUTE_URL);
+
+            $message = (new \Swift_Message('Oubli de mot de passe - Réinitialisation'))
+                ->setFrom(array('admin@sortir.com' => 'Administrateur site'))
+                ->setTo($user->getEmail())
+                ->setBody(
+                    $this->renderView(
+                        'user/resetPasswordMail.html.twig',
+                        [
+                            'user' => $user,
+                            'url' => $urlcible
+                        ]
+                    ),
+                    'text/html'
+                );
+            $mailer->send($message);
+
+            $this->addFlash('success', 'Lien généré et envoyé par mail : veuillez le suivre pour réinitialiser votre mot de passe !');
+
+            //return $this->redirectToRoute('security_login');
+
+            return $this->render('user/lienReinitialisationMdp.html.twig', ['urlCible' => $urlcible, 'token'=>$token]);
+        }
+
+        return $this->render('user/mdpoublie.html.twig', ['mdpOublieForm' => $mdpOublieForm->createView()]);
+    }
+
+    /**
+     * @Route("/user/reinitialiser-mdp/{token}", name="reinitialiser_mdp", requirements={"token" = ".+"})
+     */
+    public function reinitialiserMdp($token, Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder){
+
+        $userRepo = $this->getDoctrine()->getRepository(User::class);
+        $user = $userRepo->findOneByToken($token);
+
+        $mdpReinitialiseForm = $this->createForm(MdpReinitialiseType::class, $user);
+        $mdpReinitialiseForm->handleRequest($request);
+
+        if ($mdpReinitialiseForm->isSubmitted() && $mdpReinitialiseForm->isValid()){
+            $hashed = $encoder->encodePassword($user, $user->getPassword());
+            $user->setPassword($hashed);
+            $em->persist($user);
+            $em->flush();
+            $this->addFlash("success", "nouveau mot de passe enregistré !");
+            return $this->redirectToRoute("liste_sorties");
+
+        }
+
+        return $this->render('user/reinitialiserMdp.html.twig', ['mdpReinitialiseForm' => $mdpReinitialiseForm->createView()]);
     }
 
 }

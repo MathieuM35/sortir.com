@@ -35,6 +35,13 @@
                 {% if erreur %}
                     <div class="flash-error">{{ erreur.message }}</div>
                 {% endif %}
+                {% for label,messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
                 <form method="post">
                     <div class="form-group">
                         <label for="username">Votre identifiant ou adresse email :</label>
@@ -56,6 +63,7 @@
                         <button type="submit" class="btn btn-primary btn-lg btn-block">Connexion</button>
                     </div>
                 </form>
+                <div><a href="{{ url('mdp_oublie') }}">Mot de passe oublié</a></div>
             </div>
         </div>
     </div>
