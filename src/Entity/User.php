@@ -46,10 +46,11 @@ class User implements AdvancedUserInterface
 
     /**
      * @Assert\NotBlank(message="Veuillez renseigner votre téléphone svp !")
+     * @Assert\Regex(pattern="/^\+33\(0\)[0-9]*$/", message="Le numéro de téléphone n'est pas valide")
      * @ORM\Column(type="string", length=10, nullable=true)
      */
     private $telephone;
-/* * @Assert\Regex(pattern="/^\+33\(0\)[0-9]*$/", message="Le numéro de téléphone n'est pas valide")*/
+/* */
 
     /**
      * @Assert\NotBlank(message="Veuillez renseigner votre adresse email svp !")
@@ -116,7 +117,7 @@ class User implements AdvancedUserInterface
     /**
      * @ORM\Column(type="string", nullable=true)
      *
-     * @Assert\File(mimeTypes={ "image/png","image/jpeg","image/jpg","image/gif" })
+     * @Assert\File(mimeTypes={ "image/png","image/jpeg","image/jpg","image/gif" }, groups={"update"})
      */
     private $photo;
 
@@ -126,6 +127,34 @@ class User implements AdvancedUserInterface
     {
         $this->groupes = new ArrayCollection();
         $this->groupeCreateur = new ArrayCollection();
+    }
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $token;
+
+    /**
+     * @return mixed
+     */
+    public function getToken()
+    {
+        return $this->token;
+    }
+
+    /**
+     * @param mixed $token
+     * @return User
+     */
+    public function setToken($token)
+    {
+        $this->token = $token;
+        return $this;
+    }
+
+    public function setResetToken($token){
+        $this->token = $token;
+        return $this;
     }
 
     /**

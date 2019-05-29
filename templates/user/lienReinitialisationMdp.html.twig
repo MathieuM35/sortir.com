@@ -1,0 +1,9 @@
+{% extends 'layout.html.twig' %}
+{% block title %}Reinitialisez votre mot de passe{% endblock %}
+{% block main %}
+
+    <h1>Cliquez sur le lien</h1>
+
+    <a href="{{ url('reinitialiser_mdp',{'token':token}) }}">lien pour réinitialiser mdp : {{ urlCible }}</a>
+
+{% endblock %}

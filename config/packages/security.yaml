@@ -39,6 +39,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/user/mdp-oublie, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/user/reinitialiser-mdp, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/register, roles: ROLE_ADMIN }
         - { path: ^/site, roles: ROLE_ADMIN }
         - { path: ^/ville, roles: ROLE_ADMIN }
