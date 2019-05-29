@@ -1,30 +1,81 @@
-{% extends 'base.html.twig' %}
+{% extends 'layout.html.twig' %}
 
-{% block title %}Groupe{% endblock %}
+{% block title %}Détails groupe {{ groupe.nom }}{% endblock %}
 
-{% block body %}
-    <h1>Groupe</h1>
+{% block main %}
+    <div class="text-center py-3 addSortie">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="mx-auto col-10 bg-white p-5 col-md-10">
+                    <h1>Détails de votre groupe {{ groupe.nom }} </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container privateGroupPage">
+        <h3>Membres de votre groupe</h3>
+        <table class="table table-striped">
+            <thead>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th class="d-none d-md-table-cell">Site</th>
+            <th></th>
+            </thead>
+            <tbody>
+            {% for membre in groupe.membres %}
+                <tr>
+                    <td>{{ membre.nom }}</td>
+                    <td>{{ membre.prenom }}</td>
+                    <td class="d-none d-md-table-cell">{{ membre.site.nom }}</td>
+                    <td>
+                        <!-- Lien trigger détails profils modal -->
+                        <a data-toggle="modal" data-target="#detailProfil{{ membre.id }}"
+                           href="{{ url('detail-profil',{'id':membre.id }) }}">Voir le profil
+                        </a>
+                    </td>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ groupe.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ groupe.nom }}</td>
-            </tr>
-        </tbody>
-    </table>
+                    <!-- Modal détails profils -->
+                    <div class="modal fade" id="detailProfil{{ membre.id }}" tabindex="-1"
+                         role="dialog"
+                         aria-labelledby="detailProfil" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Détails du profil
+                                        de {{ membre.prenom  }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    {{ render(controller(
+                                        'App\\Controller\\UserController::consulterProfil',
+                                        { 'id':membre.id }
+                                    )) }}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                        Fermer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-    {% for membre in groupe.membres %}
-    <p>{{ membre.nom }}</p>
-    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
-    <a href="{{ path('groupe_index') }}">back to list</a>
+        {# BOUTONS ACTIONS #}
+        <a href="{{ path('groupe_edit', {'id': groupe.id}) }}">
+            <button class="btn btn-primary btn-block">Ajouter / Supprimer des membres</button>
+        </a>
 
-    <a href="{{ path('groupe_edit', {'id': groupe.id}) }}">edit</a>
-
-    {{ include('groupe/_delete_form.html.twig') }}
+        <a href="{{ path('groupe_index') }}">
+            <button class="btn btn-outline-secondary btn-block">Retour aux groupes</button>
+        </a>
+        {{ include('groupe/_delete_form.html.twig') }}
+    </div>
 {% endblock %}

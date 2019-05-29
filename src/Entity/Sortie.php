@@ -75,6 +75,29 @@ class Sortie
     private $motifAnnulation;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $privee;
+
+    /**
+     * @return mixed
+     */
+    public function getPrivee()
+    {
+        return $this->privee;
+    }
+
+    /**
+     * @param mixed $privee
+     * @return Sortie
+     */
+    public function setPrivee($privee)
+    {
+        $this->privee = $privee;
+        return $this;
+    }
+
+    /**
      * @return mixed
      */
     public function getMotifAnnulation()

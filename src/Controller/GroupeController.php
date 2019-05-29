@@ -20,8 +20,9 @@ class GroupeController extends Controller
      */
     public function index(GroupeRepository $groupeRepository): Response
     {
+        $user = $this->getUser();
         return $this->render('groupe/index.html.twig', [
-            'groupes' => $groupeRepository->findAll(),
+            'groupes' => $groupeRepository->findGroupesByCreateur($user),
         ]);
     }
 

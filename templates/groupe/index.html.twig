@@ -12,32 +12,36 @@
             </div>
         </div>
     </div>
-
-    <table class="table">
-        <thead>
+    <div class="container privateGroupPage">
+        <table class="table table-striped">
+            <thead>
             <tr>
-                <th>Id</th>
                 <th>Nom</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
-        </thead>
-        <tbody>
-        {% for groupe in groupes %}
-            <tr>
-                <td>{{ groupe.id }}</td>
-                <td>{{ groupe.nom }}</td>
-                <td>
-                    <a href="{{ path('groupe_show', {'id': groupe.id}) }}">show</a>
-                    <a href="{{ path('groupe_edit', {'id': groupe.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="3">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for groupe in groupes %}
+                <tr>
+                    <td>{{ groupe.nom }}</td>
+                    <td>
+                        <a class="actions" href="{{ path('groupe_show', {'id': groupe.id}) }}">Afficher</a>
+                        <a class="actions" href="{{ path('groupe_edit', {'id': groupe.id}) }}">Ajouter / Supprimer des membres</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">
+                        <div class="alert alert-warning" role="alert">Vous n'avez pas encore créé de groupe privé</div></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
-    <a href="{{ path('groupe_new') }}">Create new</a>
+        <a href="{{ path('groupe_new') }}">
+            <button class="btn btn-primary btn-block">
+                Créer un nouveau groupe
+            </button>
+        </a>
+    </div>
 {% endblock %}

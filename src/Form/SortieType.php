@@ -2,9 +2,13 @@
 
 namespace App\Form;
 
+use App\Entity\Groupe;
 use App\Entity\Lieu;
 use App\Entity\Sortie;
+use App\Entity\User;
 use App\Entity\Ville;
+use App\Repository\GroupeRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -26,36 +30,53 @@ class SortieType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'attr'=>['placeholder'=>'Nom de votre sortie']
+                'attr' => ['placeholder' => 'Nom de votre sortie']
             ])
             ->add('dateHeureDebut', DateTimeType::class, ['widget' => 'single_text'])
             ->add('dateLimiteInscription', DateType::class, ['widget' => 'single_text'])
             ->add('nbInscriptionsMax', IntegerType::class, [
-                'attr'=>['placeholder'=>'Nombre d\'inscription maximum']
+                'attr' => ['placeholder' => 'Nombre d\'inscription maximum']
             ])
             ->add('duree', IntegerType::class, [
-                'label'=>'Durée (en min)',
-                'attr'=>['placeholder'=>'Durée en minutes']
+                'label' => 'Durée (en min)',
+                'attr' => ['placeholder' => 'Durée en minutes']
             ])
-            ->add('infosSortie', TextareaType::class,[
-                'attr'=>['placeholder'=>'Entrer une description pour votre sortie',]
+            ->add('infosSortie', TextareaType::class, [
+                'attr' => ['placeholder' => 'Entrer une description pour votre sortie',]
             ])
-        ->add('ville', EntityType::class, [
+            ->add('groupe', EntityType::class, [
+                'class' => Groupe::class,
+                'query_builder' => function (GroupeRepository $repo) use ($options) {
+                    return $repo->selectGroupesByCreateurForSortieType($options['user']);
+                },
+                'choice_value' => function (Groupe $entity = null) {
+                    return $entity ? $entity->getId() : '';
+                },
+                'label' => 'Si sortie privée, selectionnez un groupe :',
+                'placeholder' => 'Sortie publique',
+                'choice_label' => function ($groupes) {
+                    return 'Groupe privé '.$groupes->getNom();
+                },
+                'required' => false,
+                'multiple' => false,
+                'mapped'=>false,
+            ])
+            ->add('ville', EntityType::class, [
                 'class' => Ville::class,
                 'choice_label' => 'nom',
                 'mapped' => false,
             ])
-        ->add('lieu', EntityType::class, [
+            ->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
                 'choice_label' => 'nom',
             ])
-        ->add('enregister',SubmitType::class,[
-            'label'=>'Enregistrer',
-            'attr' => ['class' => 'btn btn-primary btn-block']
-        ])
-        ->add('publier',SubmitType::class,[
-            'label'=>'Publier',
-            'attr' => ['class' => 'btn btn-primary btn-block']
+            ->add('enregister', SubmitType::class, [
+                'label' => 'Enregistrer',
+                'attr' => ['class' => 'btn btn-primary btn-block']
+            ])
+            ->add('publier', SubmitType::class, [
+                'label' => 'Publier',
+                'attr' => ['class' => 'btn btn-primary btn-block']
             ]);
 
         /*
@@ -92,7 +113,7 @@ class SortieType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Sortie::class,
-            'villes' => null
+            'user' => null,
         ]);
     }
 }

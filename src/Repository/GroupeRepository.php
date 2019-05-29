@@ -19,6 +19,52 @@ class GroupeRepository extends ServiceEntityRepository
         parent::__construct($registry, Groupe::class);
     }
 
+    public function findGroupesByCreateur($user)
+    {
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.createur = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function selectGroupesByCreateurForSortieType($user)
+    {
+        return $this->createQueryBuilder('g')
+            ->andWhere('g.createur = :user')
+            ->setParameter('user', $user);
+    }
+
+    public function getAllMembresByGroupId($id)
+    {
+
+        $em = $this->getEntityManager();
+
+        $dql = "SELECT u.id
+        FROM App\Entity\Groupe g
+        JOIN g.membres u
+        WHERE g.id = :gpeId";
+
+        $query = $em->createQuery($dql);
+
+        $query->setParameter('gpeId', $id);
+
+        $membres = $query->getResult();
+        return $membres;
+
+
+
+//        $query = $em->createQuery('SELECT u FROM MyProject\Model\User u WHERE u.age > 20');
+//        return $this->createQueryBuilder('g')
+//            ->select('g.membres')
+//            ->from(Groupe::class,'groupe')
+//            ->andWhere('g.id = :gpeId')
+//            ->setParameter('gpeId',$id)
+//            ->getQuery()
+//            ->getResult()
+//            ;
+    }
+
     // /**
     //  * @return Groupe[] Returns an array of Groupe objects
     //  */

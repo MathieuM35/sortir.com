@@ -67,7 +67,7 @@ class UserController extends Controller
                 $file = $importCsvForm['csvfile']->getData();
                 $fileName = $this->generateUniqueFileName() . '.csv';
 
-                //on stccke le fichier pour ensuite le traiter
+                //on stocke le fichier pour ensuite le traiter
                 $file->move($this->getParameter('photos_directory'), $fileName);
 
                 //on traite le fichier
@@ -116,7 +116,7 @@ class UserController extends Controller
                 }
                 $em->flush();
                 $this->addFlash("success", "Utilisateurs créés avec succès !");
-                $this->redirectToRoute('liste_users');
+                return $this->redirectToRoute('liste_users');
 
             } else {
                 $this->addFlash("danger", "Aucun fichier soumis");
