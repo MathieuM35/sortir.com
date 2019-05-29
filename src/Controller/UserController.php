@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Entity\User;
 use App\Entity\Ville;
@@ -57,47 +58,75 @@ class UserController extends Controller
      * @Route("/importCSV",name="user-addCSV")
      * @Template()
      */
-    public function addCSV(Request $request)
+    public function addCSV(Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $encoder)
     {
-//        //on récupère le fichier
-//        $importCsvForm = $this->createForm(ImportCsvType::class);
-//        $importCsvForm->handleRequest($request);
-//
-//        if ($importCsvForm->isSubmitted() && $importCsvForm->isValid()) {
-//
-//            if ($importCsvForm['csvfile']->getData() != null) {
-//                //$file stock le fichier uploadé
-//                /**
-//                 * @var Symfony\Component\HttpFoundation\File\UploadedFile $file
-//                 */
-//                dump($importCsvForm['csvfile']);
-////
-//                $fileName = $this->generateUniqueFileName() . '.' . $file->guessExtension();
-////                //Déplacer le fichier dans le dossier où les photos sont stockées
-//                $file->move(
-//                    $this->getParameter('photos_directory'),
-//                    $fileName
-//                );
+        //on récupère le fichier
+        $importCsvForm = $this->createForm(ImportCsvType::class);
+        $importCsvForm->handleRequest($request);
 
-//            $fichier = $request->files->get('import_csv[csvfile]');
-//            dump($fichier);
-//            $fileName = $fichier->getClientOriginalName().'.'.$fichier->guessExtension();
-//            $fichier->move(
-//                $this->getParameter('photos_directory'),
-//                $fileName
-//            );
-//            }
+        if ($importCsvForm->isSubmitted() && $importCsvForm->isValid()) {
 
-        //on traite le fichier
-//            $utilisateurs = array(); // Tableau qui va contenir les éléments extraits du fichier CSV
-//            $ligne = 0; // Représente la ligne
+            if ($importCsvForm['csvfile']->getData() != null) {
+                dump($importCsvForm['csvfile']);
+                $file = $importCsvForm['csvfile']->getData();
+                $fileName = $this->generateUniqueFileName() . '.csv';
 
-//        if($handle = fopen("c:\\folder\\resource.txt", "r") != false){
-//
-//        }
+                //on stocke le fichier pour ensuite le traiter
+                $file->move($this->getParameter('photos_directory'), $fileName);
 
-//        return (['importCsvForm' => $importCsvForm->createView()]);
+                //on traite le fichier
+                $utilisateurs = array(); // $utilisateurs va contenir les users extraits du fichier csv
+                $ligne = 0;
 
+                // Import du fichier CSV
+                //$handle = fichier à manipuler
+                //$data = ligne du fichier à traiter
+                if (($handle = fopen("./uploads/photos/" . $fileName, "r")) !== FALSE) { // Lecture du fichier, à adapter
+                    while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) { // Eléments séparés par un point-virgule, à modifier si necessaire
+                        $num = count($data); // Nombre d'éléments sur la ligne traitée
+                        $ligne++;
+                        for ($c = 0; $c < $num; $c++) {
+                            $utilisateurs[$ligne] = array(
+                                "nom" => $data[0],
+                                "prenom" => $data[1],
+                                "email" => $data[2],
+                                "telephone" => $data[3],
+                                "idSite" => $data[4],
+                            );
+                        }
+                    }
+                    fclose($handle);
+                }
+
+                $siteRepo = $em->getRepository(Site::class);
+
+                //on ajoute en bdd les utilisateurs du tableau $utilisateurs
+                foreach ($utilisateurs as $utilisateur) {
+                    $user = new User();
+
+                    $hashed = $encoder->encodePassword($user, "1234");
+                    $user->setPassword($hashed);
+                    $user->setActif(true);
+                    $user->setAdministrateur(false);
+
+                    $user->setUsername($utilisateur['prenom'].".".$utilisateur['nom']);
+                    $user->setNom($utilisateur['nom']);
+                    $user->setPrenom($utilisateur['prenom']);
+                    $user->setEmail($utilisateur['email']);
+                    $user->setTelephone($utilisateur['telephone']);
+                    $user->setSite($siteRepo->find($utilisateur['idSite']));
+
+                    $em->persist($user);
+                }
+                $em->flush();
+                $this->addFlash("success", "Utilisateurs créés avec succès !");
+                return $this->redirectToRoute('liste_users');
+
+            } else {
+                $this->addFlash("danger", "Aucun fichier soumis");
+            }
+        }
+        return (['importCsvForm' => $importCsvForm->createView()]);
     }
 
 

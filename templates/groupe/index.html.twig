@@ -1,0 +1,47 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Mes groupes privés{% endblock %}
+
+{% block main %}
+    <div class="text-center py-3 addSortie">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="mx-auto col-10 bg-white p-5 col-md-10">
+                    <h1>Mes groupes privés</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container privateGroupPage">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for groupe in groupes %}
+                <tr>
+                    <td>{{ groupe.nom }}</td>
+                    <td>
+                        <a class="actions" href="{{ path('groupe_show', {'id': groupe.id}) }}">Afficher</a>
+                        <a class="actions" href="{{ path('groupe_edit', {'id': groupe.id}) }}">Ajouter / Supprimer des membres</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">
+                        <div class="alert alert-warning" role="alert">Vous n'avez pas encore créé de groupe privé</div></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{{ path('groupe_new') }}">
+            <button class="btn btn-primary btn-block">
+                Créer un nouveau groupe
+            </button>
+        </a>
+    </div>
+{% endblock %}

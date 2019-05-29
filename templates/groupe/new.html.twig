@@ -1,0 +1,24 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Nouveau groupe privé{% endblock %}
+
+{% block main %}
+    <div class="text-center py-3 addSortie">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="mx-auto col-10 bg-white p-5 col-md-10">
+                    <h1>Créer un nouveau groupe privé</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid mainContent">
+        <div class="container">
+            {{ include('groupe/_form.html.twig') }}
+
+            <a href="{{ path('groupe_index') }}">
+                <button class="btn btn-outline-secondary btn-block">Retour aux groupes</button>
+                </a>
+        </div>
+    </div>
+{% endblock %}

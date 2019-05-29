@@ -39,13 +39,14 @@
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ app.user.username|upper }}
                             {% if app.user.photo is not empty %}
-                                <img src="{{ asset('uploads/photos/' ~ app.user.photo) }}" style="width: 40px">
+                                <img class="photoProfilNavBar" src="{{ asset('uploads/photos/' ~ app.user.photo) }}">
                             {% else %}
                                 <i class="fas fa-user-circle"></i>
                             {% endif %}
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ path('user-update') }}">Mon profil</a>
+                            <a class="dropdown-item" href="{{ path('groupe_index') }}">Mes groupes privés</a>
                             <a class="dropdown-item" href="{{ path('logout') }}">Déconnexion</a>
                         </div>
                     </li>

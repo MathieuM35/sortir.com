@@ -13,6 +13,10 @@ h1, h2, h3, h4, h5{
     background-image: url("../img/p5.png");
 }
 
+.table{
+    width: 100%;
+}
+
 /*Login*/
 .loginPage{
     height: 100%;
@@ -22,6 +26,25 @@ h1, h2, h3, h4, h5{
     background-size: cover;
     background-repeat: no-repeat;
     margin: auto;
+}
+
+.form-control{
+    border:1px solid grey;
+}
+
+.addGroup .form-check{
+    margin: 10px 0;
+}
+
+.privateGroupPage{
+    padding: 20px 0;
+}
+.privateGroupPage .table td, thead, th{
+    padding: 10px 10px;
+}
+
+.privateGroupPage .table thead th{
+    padding: 10px 10px;
 }
 
 /*Home*/
@@ -61,6 +84,10 @@ h1, h2, h3, h4, h5{
     background-color: #253C59 !important;
 }
 
+.photoProfilNavBar{
+    width: 40px;
+    border-radius: 50%;
+}
 
 .navbar .nav-item {
     position: relative;
@@ -105,6 +132,10 @@ h1, h2, h3, h4, h5{
     width: 100%;
     text-align: center;
     margin: 15px 0;
+}
+
+.actions{
+    margin-right : 10px;
 }
 
 /*Footer*/

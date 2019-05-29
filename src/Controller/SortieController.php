@@ -3,11 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Etat;
+use App\Entity\Groupe;
 use App\Entity\Sortie;
+use App\Entity\User;
 use App\Entity\Ville;
 use App\Form\AnnulationType;
 use App\Form\RechercheSortieType;
 use App\Form\SortieType;
+use App\Repository\GroupeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -89,10 +92,11 @@ class SortieController extends Controller
 
         $villes = $em->getRepository(Ville::class)->findAll();
 
-        $formSortie = $this->createForm(SortieType::class, $sortie, array('villes' => $villes));
+        $formSortie = $this->createForm(SortieType::class, $sortie, array('user' => $this->getUser()));
         $formSortie->handleRequest($request);
 
         if ($formSortie->isSubmitted() && $formSortie->isValid()) {
+
             $erreurs = "";
             //on vérifie les dates
             if ($sortie->getDateHeureDebut() < new \DateTime()) {
@@ -107,6 +111,25 @@ class SortieController extends Controller
             if ($sortie->getNbInscriptionsMax() < 2) {
                 $erreurs .= " Nombre minimum de participants : 2 ";
             }
+
+
+            //on vérifie s'il s'agit d'une sortie privée
+            if($formSortie->get('groupe')->getData() != null){
+                $sortie->setPrivee(true);
+                $idGroupePrive = $formSortie->get('groupe')->getData();
+
+                $groupeRepo = $this->getDoctrine()->getRepository(Groupe::class);
+                //$membresGroupe contient les id des membres du groupe privé
+                $membresGroupe = $groupeRepo->getAllMembresByGroupId($idGroupePrive);
+
+                $userRepo = $this->getDoctrine()->getRepository(User::class);
+
+                foreach ($membresGroupe as $membre){
+                    $user = new User();
+                    $sortie->addParticipant($userRepo->find($membre));
+                }
+            }
+
             //on set un état différent en fonction du bouton submit cliqué (Enregistrer ou Publier)
             //si clic sur le bouton Enregister on set l'état 'En création'
             if ($formSortie->get('enregister')->isClicked()) {

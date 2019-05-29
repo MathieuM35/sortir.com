@@ -45,10 +45,11 @@ class SortieRepository extends ServiceEntityRepository
         $em = $this->getEntityManager();
 
         $dql = <<<DQL
-SELECT s, u
+SELECT s, u, e
 FROM App\Entity\Sortie s
 JOIN s.participants u
-JOIN u.site si
+JOIN s.organisateur o
+JOIN o.site si
 JOIN s.etat e
 WHERE
 DQL;
