@@ -1,0 +1,26 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Modifier la ville {{ ville.nom }}{% endblock %}
+
+{% block main %}
+    <div class="text-center py-3 addSortie">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="mx-auto col-10 bg-white p-5 col-md-10">
+                    <h1>Modifier la ville {{ ville.nom }} </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid mainContent">
+        <div class="container privateGroupPage">
+
+            {{ include('ville/_form.html.twig', {'button_label': 'Modifier'}) }}
+
+            <a href="{{ path('ville') }}">
+                <button class="btn btn-outline-secondary btn-block">Retour aux villes</button>
+            </a>
+
+        </div>
+    </div>
+{% endblock %}

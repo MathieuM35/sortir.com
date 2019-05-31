@@ -44,12 +44,17 @@
                 <thead>
                 <tr>
                     <th scope="col">Nom</th>
+                    <th scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for site in sites %}
                     <tr>
                         <td>{{ site.nom }}</td>
+                        <td>
+                            <a class="actions" href="{{ path('site_edit', {'id': site.id}) }}">Modifier</a>
+                            {{ include('site/_delete_form.html.twig') }}
+                        </td>
                     </tr>
                 {% endfor %}
 

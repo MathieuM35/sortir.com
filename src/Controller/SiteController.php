@@ -54,4 +54,47 @@ class SiteController extends Controller
         }
         return $this->render('site/add.html.twig', ["siteForm"=>$siteForm->createView()]);
     }
+
+    /**
+     * @Route("/site/show/{id}", name="site_show", methods={"GET"})
+     */
+    public function show(Site $site){
+        return $this->render('site/show.html.twig', [
+            'site' => $site,
+        ]);
+    }
+
+    /**
+     * @Route("/site/edit/{id}", name="site_edit", methods={"GET","POST"})
+     */
+    public function edit(Request $request, Site $site){
+        $form = $this->createForm(SiteType::class, $site);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('site', [
+                'id' => $site->getId(),
+            ]);
+        }
+
+        return $this->render('site/edit.html.twig', [
+            'site' => $site,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/site/delete/{id}", name="site_delete", methods={"DELETE"})
+     */
+    public function delete(Request $request, Site $site){
+        if ($this->isCsrfTokenValid('delete'.$site->getId(), $request->request->get('_token'))) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->remove($site);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('site');
+    }
 }

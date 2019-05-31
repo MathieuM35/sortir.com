@@ -37,7 +37,7 @@ class Lieu
     private $longitude;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Sortie", mappedBy="lieu")
+     * @ORM\OneToMany(targetEntity="App\Entity\Sortie", mappedBy="lieu",cascade={"remove"})
      */
     private $sorties;
 
