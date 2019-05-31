@@ -296,7 +296,7 @@ class SortieController extends Controller
                     $em->flush();
 
                     $this->addFlash("success", "La sortie a bien été annulée");
-                    $this->redirectToRoute("sortie_details", ['id' => $sortie->getId()]);
+                    return $this->redirectToRoute("sortie_details", ['id' => $sortie->getId()]);
                 }
             } else {
                 $this->add("danger", "Impossible d'annuler la sortie en cours");

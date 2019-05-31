@@ -47,7 +47,7 @@ class UserController extends Controller
             $em->persist($user);
             $em->flush();
             $this->addFlash("success", "utilisateur enregistré !");
-            $this->redirectToRoute("liste_sorties");
+            return $this->redirectToRoute("liste_users");
         }
 
         return $this->render("user/register.html.twig", ['registerForm' => $registerForm->createView()]);

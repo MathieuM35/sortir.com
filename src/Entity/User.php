@@ -80,7 +80,7 @@ class User implements AdvancedUserInterface
     private $sortiesOrganise;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Groupe", mappedBy="createur")
+     * @ORM\OneToMany(targetEntity="App\Entity\Groupe", mappedBy="createur",cascade={"remove"})
      */
     private $groupeCreateur;
 

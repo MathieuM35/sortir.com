@@ -13,10 +13,12 @@
     </div>
 
     <div class="container-fluid mainContent">
-        {{ form_start(lieuForm) }}
-        {{ form_widget(lieuForm) }}
-        <button class="btn btn-primary" type="submit">Enregistrer</button>
-        {{ form_end(lieuForm) }}
+        <div class="container">
+            {{ form_start(lieuForm) }}
+            {{ form_widget(lieuForm) }}
+            <button class="btn btn-primary" type="submit">Enregistrer</button>
+            {{ form_end(lieuForm) }}
+        </div>
     </div>
 
 {% endblock %}

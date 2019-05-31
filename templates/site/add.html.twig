@@ -1,11 +1,24 @@
 {% extends 'layout.html.twig' %}
 {% block title %}Enregistrer un site{% endblock %}
 {% block main %}
+    <div class="text-center py-3 addSortie">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="mx-auto col-10 bg-white p-5 col-md-10">
+                    <h1>Ajouter un site</h1>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <h1>Enregistrer un site</h1>
-    {{ form_start(siteForm) }}
-    {{ form_widget(siteForm) }}
-    <button class="btn btn-primary" type="submit">Enregistrer</button>
-    {{ form_end(siteForm) }}
+    <div class="container-fluid mainContent">
+        <div class="container">
+            {{ form_start(siteForm) }}
+            {{ form_widget(siteForm) }}
+            <button class="btn btn-primary" type="submit">Enregistrer</button>
+            {{ form_end(siteForm) }}
+
+        </div>
+    </div>
 
 {% endblock %}

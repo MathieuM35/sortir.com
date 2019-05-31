@@ -18,8 +18,14 @@ class LieuType extends AbstractType
         $builder
             ->add('nom', TextType::class, ['attr' => ['placeholder' => 'Nom du lieu']])
             ->add('rue', TextType::class, ['attr' => ['placeholder' => 'Nom de la rue']])
-            ->add('latitude', NumberType::class, ['attr' => ['placeholder' => 'Latitude du lieu']])
-            ->add('longitude', NumberType::class, ['attr' => ['placeholder' => 'Longitude du lieu']])
+            ->add('latitude', NumberType::class, [
+                'required'=>false,
+                'attr' => ['placeholder' => 'Latitude du lieu']
+            ])
+            ->add('longitude', NumberType::class, [
+                'required'=>false,
+                'attr' => ['placeholder' => 'Longitude du lieu']
+            ])
             ->add('ville', EntityType::class, [
                 'class' => Ville::class,
                 'choice_label' => 'nom',

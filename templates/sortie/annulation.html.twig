@@ -2,72 +2,84 @@
 
 {% block main %}
 
-    <div class="row">
-        <h2>Annuler votre sortie</h2>
-    </div>
-    <div class="row">
-        <table class="table table-striped">
-            <tr>
-                <th>Nom de la sortie :</th>
-                <td>{{ sortie.nom }}</td>
-            </tr>
-            <tr>
-                <th>Date de la sortie :</th>
-                <td>{{ sortie.dateHeureDebut|date("d/m/Y à h:i") }}</td>
-            </tr>
-            <tr>
-                <th>Ville organisatrice :</th>
-                <td>{{ sortie.organisateur.site.nom }}</td>
-            </tr>
-            <tr>
-                <th>Lieu :</th>
-                <td>{{ sortie.lieu.nom }}<br>
-                    {{ sortie.lieu.rue }}<br>
-                    {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}</td>
-            </tr>
-        </table>
-
-        <div class="col-12">
-            {{ form_start(formAnnulation) }}
-            {{ form_row(formAnnulation.motif) }}
-        </div>
-    </div>
-    <div class="row">
-    <div class="col-12">
-
-
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmAnnulation">
-            Annuler la sortie
-        </button>
-
-        <a href="{{ url('sortie_details',{'id':idSortie}) }}">
-            <button type="button" class="btn btn-secondary">Retour à la sortie</button>
-        </a>
-    </div>
-
-
-    <!-- MODAL CONFIRMATION ANNULATION -->
-    <div class="modal fade" id="confirmAnnulation" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Confirmer l'annulation</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Etes-vous sûr de vouloir supprimer la sortie {{ sortie.nom }} ?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
-                    {{ form_widget(formAnnulation.annuler) }}
-                    {{ form_end(formAnnulation) }}
+    <div class="text-center py-3 addSortie">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="mx-auto col-10 bg-white p-5 col-md-10">
+                    <h1>Annuler la sortie {{ sortie.nom }}</h1>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="container-fluid privateGroupPage">
+    <div class="container">
+
+        <div class="row">
+            <table class="table table-striped">
+                <tr>
+                    <th>Nom de la sortie :</th>
+                    <td>{{ sortie.nom }}</td>
+                </tr>
+                <tr>
+                    <th>Date de la sortie :</th>
+                    <td>{{ sortie.dateHeureDebut|date("d/m/Y à h:i") }}</td>
+                </tr>
+                <tr>
+                    <th>Ville organisatrice :</th>
+                    <td>{{ sortie.organisateur.site.nom }}</td>
+                </tr>
+                <tr>
+                    <th>Lieu :</th>
+                    <td>{{ sortie.lieu.nom }}<br>
+                        {{ sortie.lieu.rue }}<br>
+                        {{ sortie.lieu.ville.codePostal }} {{ sortie.lieu.ville.nom }}</td>
+                </tr>
+            </table>
+
+            <div class="col-12">
+                {{ form_start(formAnnulation) }}
+                {{ form_row(formAnnulation.motif) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+
+
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmAnnulation">
+                    Annuler la sortie
+                </button>
+
+                <a href="{{ url('sortie_details',{'id':idSortie}) }}">
+                    <button type="button" class="btn btn-secondary">Retour à la sortie</button>
+                </a>
+            </div>
+
+
+            <!-- MODAL CONFIRMATION ANNULATION -->
+            <div class="modal fade" id="confirmAnnulation" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Confirmer l'annulation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Etes-vous sûr de vouloir supprimer la sortie {{ sortie.nom }} ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Retour</button>
+                            {{ form_widget(formAnnulation.annuler) }}
+                            {{ form_end(formAnnulation) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
