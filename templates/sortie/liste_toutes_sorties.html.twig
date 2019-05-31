@@ -138,6 +138,8 @@
 
         <!-- debut sorties privées -->
 
+
+
         <h3>Vos sorties privées </h3>
         <table class="table table-striped table-hover">
             <thead>
@@ -155,7 +157,9 @@
             </thead>
 
             {% for sortie in sorties %}
-                {% if sortie.privee == 1 %}
+
+                {% if sortie.privee == 1 and (app.user in sortie.groupe.membres or app.user is same as(sortie.organisateur) ) %}
+
                     <tr>
                         <td><a href="{{ url('sortie_details',{'id':sortie.id}) }}">{{ sortie.nom }}</a></td>
                         <td>{{ sortie.dateHeureDebut|date("d/m/Y h:i") }}</td>

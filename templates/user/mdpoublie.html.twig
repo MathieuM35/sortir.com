@@ -1,18 +1,31 @@
 {% extends 'layout.html.twig' %}
 {% block title %}Mot de passe oublié{% endblock %}
 {% block main %}
-
-    <h1>Renseignez votre adresse email</h1>
-    <div>
-        {{ form_start(mdpOublieForm) }}
-
-        <div class="group">
-            {{ form_label(mdpOublieForm.email) }}
-            {{ form_widget(mdpOublieForm.email) }}
+    <div class="text-center py-3 addSortie">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="mx-auto col-10 bg-white p-5 col-md-10">
+                    <h1>Mot de passe oublié</h1>
+                </div>
+            </div>
         </div>
+    </div>
 
-        <button class="btn btn-primary btn-lg btn-block" type="submit">Valider</button>
-        {{ form_end(mdpOublieForm) }}
+    <div class="container-fluid mainContent">
+        <div class="container">
+            <h3>Renseignez votre adresse email</h3>
+            <div>
+                {{ form_start(mdpOublieForm) }}
+
+                <div class="group">
+                    {{ form_label(mdpOublieForm.email) }}
+                    {{ form_widget(mdpOublieForm.email) }}
+                </div>
+
+                <button class="btn btn-primary btn-block" type="submit">Valider</button>
+                {{ form_end(mdpOublieForm) }}
+            </div>
+        </div>
     </div>
 
 {% endblock %}

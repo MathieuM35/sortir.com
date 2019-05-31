@@ -1,37 +1,51 @@
 {% extends 'layout.html.twig' %}
 
 {% block main %}
-    <div class="row">
-        <h2>Modifier votre sortie</h2>
-    </div>
-    {{ form_start(formSortie) }}
-
-    <div class="row">
-        <div class="col-6">
-            {{ form_row(formSortie.nom) }}
-            {{ form_row(formSortie.dateHeureDebut) }}
-            {{ form_row(formSortie.dateLimiteInscription) }}
-            {{ form_row(formSortie.nbInscriptionsMax) }}
-            {{ form_row(formSortie.duree) }}
-            {{ form_row(formSortie.infosSortie) }}
-        </div>
-        <div class="col-6">
-            {{ form_row(formSortie.ville) }}
-            {{ form_row(formSortie.lieu) }}
+    <div class="text-center py-3 addSortie">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="mx-auto col-10 bg-white p-5 col-md-10">
+                    <h1>Modifier la sortie {{ sortie.nom }}</h1>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="row">
-        {% if sortie.etat.id == 1 %} {# sortie.etat == 1 siginifie état "En création" (non publiée) #}
-            <div class="col-3"> {{ form_widget(formSortie.enregister, { 'label': 'Enregister' }) }}</div>
-        {% else %}
-            <div class="col-3" style="display: none"> {{ form_widget(formSortie.enregister) }}</div>
-        {% endif %}
-        <div class="col-6"> {{ form_widget(formSortie.publier, { 'label': 'Publier' }) }}</div>
 
-        <a href="{{ url('sortie_details',{'id':idSortie}) }}">
-            <button type="button" class="btn btn-secondary">Retour à la sortie</button>
-        </a>
-        {{ form_end(formSortie) }}
+    <div class="container-fluid mainContent">
+        <div class="container">
+            {{ form_start(formSortie) }}
+
+            <div class="row">
+                <div class="col-6">
+                    {{ form_row(formSortie.nom) }}
+                    {{ form_row(formSortie.dateHeureDebut) }}
+                    {{ form_row(formSortie.dateLimiteInscription) }}
+                    {{ form_row(formSortie.nbInscriptionsMax) }}
+                    {{ form_row(formSortie.duree) }}
+                    {{ form_row(formSortie.infosSortie) }}
+                </div>
+                <div class="col-6">
+                    {{ form_row(formSortie.ville) }}
+                    {{ form_row(formSortie.lieu) }}
+
+                    <span style="display: none"> {{ form_row(formSortie.groupe) }}</span>
+                </div>
+            </div>
+            <div class="row">
+                {% if sortie.etat.id == 1 %} {# sortie.etat == 1 siginifie état "En création" (non publiée) #}
+                    <div class="col-3"> {{ form_widget(formSortie.enregister, { 'label': 'Enregister' }) }}</div>
+                {% else %}
+                    <div class="col-3" style="display: none"> {{ form_widget(formSortie.enregister) }}</div>
+                {% endif %}
+                <div class="col-6"> {{ form_widget(formSortie.publier, { 'label': 'Publier' }) }}</div>
+
+                <a href="{{ url('sortie_details',{'id':idSortie}) }}">
+                    <button type="button" class="btn btn-secondary">Retour à la sortie</button>
+                </a>
+
+                {{ form_end(formSortie) }}
+            </div>
+        </div>
     </div>
 
 {% endblock %}

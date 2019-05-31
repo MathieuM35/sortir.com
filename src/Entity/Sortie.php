@@ -80,6 +80,11 @@ class Sortie
     private $privee;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Groupe", inversedBy="sorties")
+     */
+    private $groupe;
+
+    /**
      * @return mixed
      */
     public function getPrivee()
@@ -140,7 +145,11 @@ class Sortie
      */
     public function addParticipant(User $user)
     {
-        $this->participants[] = $user;
+//        $this->participants[] = $user;
+//        if (!$this->participants->contains($user)) {
+            $this->participants[] = $user;
+//        }
+
     }
 
     /**
@@ -276,6 +285,18 @@ class Sortie
     public function setLieu($lieu)
     {
         $this->lieu = $lieu;
+        return $this;
+    }
+
+    public function getGroupe(): ?Groupe
+    {
+        return $this->groupe;
+    }
+
+    public function setGroupe(?Groupe $groupe): self
+    {
+        $this->groupe = $groupe;
+
         return $this;
     }
 
