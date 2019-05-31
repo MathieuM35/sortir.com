@@ -33,7 +33,7 @@ class GroupeController extends Controller
     {
         $groupe = new Groupe();
         $groupe->setCreateur($this->getUser());
-        $form = $this->createForm(Groupe1Type::class, $groupe);
+        $form = $this->createForm(Groupe1Type::class, $groupe, array('user' => $this->getUser()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -65,7 +65,7 @@ class GroupeController extends Controller
      */
     public function edit(Request $request, Groupe $groupe): Response
     {
-        $form = $this->createForm(Groupe1Type::class, $groupe);
+        $form = $this->createForm(Groupe1Type::class, $groupe, array('user' => $this->getUser()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

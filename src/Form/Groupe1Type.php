@@ -5,6 +5,8 @@ namespace App\Form;
 use App\Entity\Groupe;
 use App\Entity\Lieu;
 use App\Entity\User;
+use App\Repository\GroupeRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -19,11 +21,14 @@ class Groupe1Type extends AbstractType
             ->add('nom')
             ->add('membres', EntityType::class, [
                 'class' => User::class,
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('u')
-//                        ->andWhere('u.id NOT IN') //ne pas afficher l'utilisateur courant
-                        ->orderBy('u.nom', 'ASC');
+                'query_builder' => function (UserRepository $repo) use ($options) {
+                    return $repo->selectAllUserExceptCurrentUser($options['user']);
                 },
+//                'query_builder' => function (EntityRepository $er) {
+//                    return $er->createQueryBuilder('u')
+////                        ->andWhere('u.id NOT IN') //ne pas afficher l'utilisateur courant
+//                        ->orderBy('u.nom', 'ASC');
+//                },
                 'choice_label' => function ($membres) {
                     return $membres->getNom() . ' ' . $membres->getPrenom() . ' | ' . $membres->getSite()->getNom();
                 },
@@ -37,6 +42,7 @@ class Groupe1Type extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Groupe::class,
+            'user' => null,
         ]);
     }
 }

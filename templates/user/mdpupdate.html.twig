@@ -1,23 +1,35 @@
 {% extends 'layout.html.twig' %}
 {% block title %}Modifier votre profil{% endblock %}
 {% block main %}
+    <div class="text-center py-3 addSortie">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="mx-auto col-10 bg-white p-5 col-md-10">
+                    <h1>Modifier mon mot de passe</h1>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <h1>Modifier mon mot de passe</h1>
+    <div class="container-fluid mainContent">
+    <div class="container">
     <div>
         {{ form_start(mdpForm) }}
 
-        <div class="group">
+        <div class="form-group">
             {{ form_label(mdpForm.passwordActuel) }}
             {{ form_widget(mdpForm.passwordActuel) }}
         </div>
 
-        <div class="group">
-            {{ form_label(mdpForm.password) }}
-            {{ form_widget(mdpForm.password) }}
+        <div class="form-group">
+{#            {{ form_label(mdpForm.password) }}#}
+            {{ form_row(mdpForm.password) }}
         </div>
 
-        <button type="submit">Enregistrer</button>
+        <button class="btn btn-primary btn-block" type="submit">Enregistrer</button>
         {{ form_end(mdpForm) }}
+    </div>
+    </div>
     </div>
 
 {% endblock %}

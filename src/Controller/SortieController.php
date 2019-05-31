@@ -90,7 +90,7 @@ class SortieController extends Controller
         $sortie->setParticipants(array());
         $sortie->addParticipant($this->getUser());
 
-        $villes = $em->getRepository(Ville::class)->findAll();
+//        $villes = $em->getRepository(Ville::class)->findAll();
 
         $formSortie = $this->createForm(SortieType::class, $sortie, array('user' => $this->getUser()));
         $formSortie->handleRequest($request);
@@ -119,6 +119,7 @@ class SortieController extends Controller
                 $idGroupePrive = $formSortie->get('groupe')->getData();
 
                 $groupeRepo = $this->getDoctrine()->getRepository(Groupe::class);
+                $sortie->setGroupe($groupeRepo->find($idGroupePrive));
                 //$membresGroupe contient les id des membres du groupe privé
                 $membresGroupe = $groupeRepo->getAllMembresByGroupId($idGroupePrive);
 
@@ -128,6 +129,8 @@ class SortieController extends Controller
                     $user = new User();
                     $sortie->addParticipant($userRepo->find($membre));
                 }
+            } else{
+                $sortie->setPrivee(false);
             }
 
             //on set un état différent en fonction du bouton submit cliqué (Enregistrer ou Publier)
@@ -243,7 +246,7 @@ class SortieController extends Controller
                 $em->persist($sortie);
                 $em->flush();
                 $this->addFlash("success", $messageFlash);
-                $this->redirectToRoute("sortie_details", ['id' => $sortie->getId()]);
+                return $this->redirectToRoute("liste_sorties");
             }
             return $this->render("sortie/modification.html.twig", [
                 'formSortie' => $formSortie->createView(),

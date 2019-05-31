@@ -43,6 +43,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
+                    <th scope="col">ID</th>
                     <th scope="col">Nom</th>
                     <th scope="col">Actions</th>
                 </tr>
@@ -50,6 +51,7 @@
                 <tbody>
                 {% for site in sites %}
                     <tr>
+                        <td>{{ site.id }}</td>
                         <td>{{ site.nom }}</td>
                         <td>
                             <a class="actions" href="{{ path('site_edit', {'id': site.id}) }}">Modifier</a>
@@ -63,10 +65,11 @@
         </div>
     </div>
 
-
-    <div>
-        <a href="{{ path('site_add') }}">
-            <button class="btn btn-primary btn-lg btn-block">Ajouter un site</button>
-        </a>
+    <div class="container">
+        <div>
+            <a href="{{ path('site_add') }}">
+                <button class="btn btn-primary btn-lg btn-block">Ajouter un site</button>
+            </a>
+        </div>
     </div>
 {% endblock %}

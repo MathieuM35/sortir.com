@@ -61,6 +61,14 @@ class UserRepository extends ServiceEntityRepository implements UserLoaderInterf
             ;
     }
 
+    public function selectAllUserExceptCurrentUser($user){
+
+        return $this->createQueryBuilder('u')
+            ->andWhere('u != :user')
+            ->setParameter('user', $user);
+
+    }
+
     // /**
     //  * @return user[] Returns an array of user objects
     //  */

@@ -200,6 +200,7 @@ class UserController extends Controller
         $mdpBDD = $utilisateurBDD->getPassword();
         dump('Le mot de passe utilisateur en BDD est : ' . $mdpBDD);
         //Récupération du formulaire de mise à jour du mdp de l'utilisateur
+
         $mdpForm = $this->createForm(MotDePasseType::class, $user);
         $mdpForm->handleRequest($request);
         $mdpSaisi = $mdpForm['passwordActuel']->getData();

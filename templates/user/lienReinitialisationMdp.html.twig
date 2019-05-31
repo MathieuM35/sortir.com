@@ -1,9 +1,23 @@
 {% extends 'layout.html.twig' %}
 {% block title %}Reinitialisez votre mot de passe{% endblock %}
 {% block main %}
+    <div class="text-center py-3 addSortie">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="mx-auto col-10 bg-white p-5 col-md-10">
+                    <h1>Mot de passe oublié</h1>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <h1>Cliquez sur le lien</h1>
+    <div class="container-fluid mainContent">
+    <div class="container">
 
-    <a href="{{ url('reinitialiser_mdp',{'token':token}) }}">lien pour réinitialiser mdp : {{ urlCible }}</a>
+    <h3>Cliquez sur le lien :</h3>
+
+    <a href="{{ url('reinitialiser_mdp',{'token':token}) }}">Lien pour réinitialiser mdp : {{ urlCible }}</a>
+    </div>
+    </div>
 
 {% endblock %}
