@@ -54,7 +54,7 @@
                         <td>{{ site.id }}</td>
                         <td>{{ site.nom }}</td>
                         <td>
-                            <a class="actions" href="{{ path('site_edit', {'id': site.id}) }}">Modifier</a>
+                            <a class="actions" href="{{ path('site_edit', {'id': site.id}) }}"><i class="far fa-edit"></i></a>
                             {{ include('site/_delete_form.html.twig') }}
                         </td>
                     </tr>
