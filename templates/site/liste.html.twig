@@ -45,7 +45,8 @@
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Nom</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col">Modifier</th>
+                    <th scope="col">Supprimer</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -54,9 +55,9 @@
                         <td>{{ site.id }}</td>
                         <td>{{ site.nom }}</td>
                         <td>
-                            <a class="actions" href="{{ path('site_edit', {'id': site.id}) }}">Modifier</a>
-                            {{ include('site/_delete_form.html.twig') }}
+                            <button class="btn"><a class="actions" href="{{ path('site_edit', {'id': site.id}) }}"><i class="far fa-edit"></i></a></button>
                         </td>
+                        <td>{{ include('site/_delete_form.html.twig') }}</td>
                     </tr>
                 {% endfor %}
 

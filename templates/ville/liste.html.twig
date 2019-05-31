@@ -44,7 +44,8 @@
                 <tr>
                     <th scope="col">Nom</th>
                     <th scope="col">Code postal</th>
-                    <th scope="col">Actions</th>
+                    <th scope="col">Modifier</th>
+                    <th scope="col">Supprimer</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -53,9 +54,9 @@
                         <td>{{ ville.nom }}</td>
                         <td>{{ ville.codePostal }}</td>
                         <td>
-                            <a class="actions" href="{{ path('ville_edit', {'id': ville.id}) }}">Modifier</a>
-                            {{ include('ville/_delete_form.html.twig') }}
+                            <button class="btn"><a class="actions" href="{{ path('ville_edit', {'id': ville.id}) }}"><i class="far fa-edit"></i></a></button>
                         </td>
+                        <td>{{ include('ville/_delete_form.html.twig') }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
